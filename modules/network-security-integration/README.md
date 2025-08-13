@@ -137,7 +137,7 @@ provider "google" {
 
 module "nsi-test" {
     source  = "CheckPointSW/cloudguard-network-security/gcp//modules/network-security-integration"
-    version = "1.0.8"
+    version = "1.0.0"
 
     # --- Google Provider ---
     service_account_path              = "service-accounts/service-account-file-name.json"

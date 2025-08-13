@@ -104,14 +104,14 @@ The provider credentials can be provided either as static credentials or as [Env
 
  
 **Submodules:**
-* [`network-security-integration`](https://registry.terraform.io/modules/chkp-olgami/olgami/gcp/latest/submodules/network-security-integration) - Deploys GCP Network Security Integration.
+* [`network-security-integration`](https://registry.terraform.io/modules/CheckPointSW/cloudguard-network-security/gcp/latest/submodules/network-security-integration) - Deploys GCP Network Security Integration.
 
 Internal Submodules - 
 
-* [`firewall-rule`](https://registry.terraform.io/modules/chkp-olgami/olgami/gcp/latest/submodules/firewall-rule) - Deploys firewall rules on GCP VPCs.
-* [`internal-load-balancer`](https://registry.terraform.io/modules/chkp-olgami/olgami/gcp/latest/submodules/internal-load-balancer) - Deploys internal load balanncer.
-* [`network-and-subnet`](https://registry.terraform.io/modules/chkp-olgami/olgami/gcp/latest/submodules/network-and-subnet) - Deploys VPC and subnetwork in the VPC.
-* [`network-security-integration-common`](https://registry.terraform.io/modules/chkp-olgami/olgami/gcp/latest/submodules/network-security-integration-common) - Deploys Network Security Integration.
+* [`firewall-rule`](https://registry.terraform.io/modules/CheckPointSW/cloudguard-network-security/gcp/latest/submodules/firewall-rule) - Deploys firewall rules on GCP VPCs.
+* [`internal-load-balancer`](https://registry.terraform.io/modules/CheckPointSW/cloudguard-network-security/gcp/latest/submodules/internal-load-balancer) - Deploys internal load balanncer.
+* [`network-and-subnet`](https://registry.terraform.io/modules/CheckPointSW/cloudguard-network-security/gcp/latest/submodules/network-and-subnet) - Deploys VPC and subnetwork in the VPC.
+* [`network-security-integration-common`](https://registry.terraform.io/modules/CheckPointSW/cloudguard-network-security/gcp/latest/submodules/network-security-integration-common) - Deploys Network Security Integration.
 
 
 ***
