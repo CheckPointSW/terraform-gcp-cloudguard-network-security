@@ -29,7 +29,10 @@ As part of the deployment, the following resources are created:
 * [Firewall Policy Association](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network_firewall_policy_association)
 
 
-For additional information, see the [CloudGuard Network for GCP Network Security Integration Deployment Guide](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_Autoscaling_MIG/Default.htm)
+For additional information, see the [CloudGuard Network for GCP Network Security Integration Deployment Guide](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Default.htm)
+
+## Architecture Layout
+![Architecture Layout](./images/NSI-Architecture-Layout.jpg)
 
 ## Cross-Zone Deployment
 ### Intercept Deployment per Availability Zone in the Service VPC
