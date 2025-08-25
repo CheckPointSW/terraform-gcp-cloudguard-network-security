@@ -32,7 +32,7 @@ As part of the deployment, the following resources are created:
 For additional information, see the [CloudGuard Network for GCP Network Security Integration Deployment Guide](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Default.htm)
 
 ## Architecture Layout
-![Architecture Layout](./images/NSI-Architecture-Layout.jpg)
+![Architecture Layout](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Content/Resources/Images/GCP-NSI.png)
 
 ## Cross-Zone Deployment
 ### Intercept Deployment per Availability Zone in the Service VPC
