@@ -40,7 +40,7 @@ variable "os_version" {
 }
 variable "management_nic" {
   type = string
-  description = "Management Interface - Autoscaling Security Gateways in GCP can be managed by an ephemeral public IP or using the private IP of the internal interface (eth1)."
+  description = "Management Interface - Autoscaling Security Gateways in GCP can be managed by the ephemeral public IP or by the private IP of the Management interface (eth0)."
   default = "Ephemeral Public IP (eth0)"
 }
 variable "management_name" {
