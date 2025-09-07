@@ -1,9 +1,9 @@
-![GitHub Wachers](https://img.shields.io/github/watchers/CheckPointSW/terraform-azure-cloudguard-network-security)
-![GitHub Release](https://img.shields.io/github/v/release/CheckPointSW/terraform-azure-cloudguard-network-security)
-![GitHub Commits Since Last Commit](https://img.shields.io/github/commits-since/CheckPointSW/terraform-azure-cloudguard-network-security/latest/master)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/CheckPointSW/terraform-azure-cloudguard-network-security/master)
-![GitHub Repo Size](https://img.shields.io/github/repo-size/CheckPointSW/terraform-azure-cloudguard-network-security)
-![GitHub Downloads](https://img.shields.io/github/downloads/CheckPointSW/terraform-azure-cloudguard-network-security/total)
+![GitHub Wachers](https://img.shields.io/github/watchers/CheckPointSW/terraform-gcp-cloudguard-network-security)
+![GitHub Release](https://img.shields.io/github/v/release/CheckPointSW/terraform-gcp-cloudguard-network-security)
+![GitHub Commits Since Last Commit](https://img.shields.io/github/commits-since/CheckPointSW/terraform-gcp-cloudguard-network-security/latest/master)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/CheckPointSW/terraform-gcp-cloudguard-network-security/master)
+![GitHub Repo Size](https://img.shields.io/github/repo-size/CheckPointSW/terraform-gcp-cloudguard-network-security)
+![GitHub Downloads](https://img.shields.io/github/downloads/CheckPointSW/terraform-gcp-cloudguard-network-security/total)
 
 # Terraform Modules for CloudGuard Network Security (CGNS) - GCP
 
