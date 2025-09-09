@@ -25,12 +25,14 @@ locals {
 }
 variable "license" {
   type = string
-  description = "Checkpoint license (BYOL)."
+  description = "Checkpoint license (BYOL or PAYG)."
   default = "BYOL"
 }
 locals {
     license_allowed_values = [
-    "BYOL"]
+    "BYOL",
+    "PAYG"
+]
   // will fail if [var.license] is invalid:
   validate_license = index(local.license_allowed_values, upper(var.license))
 }

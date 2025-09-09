@@ -125,8 +125,11 @@ This module supports deployment with the following Check Point CloudGuard gatewa
 
 | Version | Image Name | License |
 |---------|------------|-------------|
-| R82 | `check-point-r82-gw-byol-nsi-777-991001866-v20250731` | BYOL |
-| R81.20 | `check-point-r8120-gw-byol-nsi-631-991001866-v20250731` | BYOL |
+| R82 | `check-point-r82-gw-byol-nsi-777-991001897-v20250904` | BYOL |
+| R82 | `check-point-r82-gw-payg-nsi-777-991001897-v20250904` | PAYG |
+| R81.20 | `check-point-r8120-gw-byol-nsi-631-991001896-v20250903` | BYOL |
+| R81.20 | `check-point-r8120-gw-payg-nsi-631-991001896-v20250903` | PAYG |
+
 
 
 ## Usage
@@ -150,7 +153,7 @@ module "nsi-test" {
     # --- Check Point---
     prefix                            = "chkp-tf-nsi"
     license                           = "BYOL"
-    image_name                        = "check-point-r8120-gw-byol-nsi-631-991001866-v20250731"
+    image_name                        = "check-point-r8120-gw-byol-nsi-631-991001896-v20250903"
     os_version                        = "R8120"
     management_nic                    = "Ephemeral Public IP (eth0)"
     management_name                   = "tf-checkpoint-management"
@@ -228,8 +231,8 @@ Leave an empty list for a protocol if you want to disable traffic for it.
 | project  | Personal project ID. The project indicates the default GCP project in which all your resources will be created. The project ID must be 6-30 characters long, start with a letter, and can only include lowercase letters, numbers, hyphens, and cannot end with a hyphen.                                                                                                | string  | N/A | "" | yes
 | organization_id | Unique identifier for your organization in GCP. It is used to manage resources and permissions within your organization. [For more detailes](https://cloud.google.com/resource-manager/docs/creating-managing-organization)                                                                                                                                           | string  | N/A | "" | yes
 | prefix | (Optional) Resources name prefix. <br/> Note: resource name must not contain reserved words based on [sk40179](https://support.checkpoint.com/results/sk/sk40179).                                                                                                                                                                                                   | string | N/A | "chkp-tf-nsi" | no |
-| license | Check Point license (BYOL).                                                                                                                                                                                                                                                                                                                                    | string | BYOL <br/> | "BYOL" | no |
-| image_name | The NSI image name (for example, check-point-r8120-gw-byol-nsi-631-991001866-v20250731).                                                                                                | string | N/A | N/A | yes |
+| license | Check Point license (BYOL or PAYG).                                                                                                                                                                                                                                                                                                                                    | string | BYOL <br/> PAYG <br/> | "BYOL" | no |
+| image_name | The NSI image name (for example, check-point-r8120-gw-byol-nsi-631-991001896-v20250903).                                                                                                | string | N/A | N/A | yes |
 | os_version | Gaia OS Version                                                                                                                                                                                                                                                                                                                                                       | string | R8110;<br/> R8120;<br/> R82; | "R8120" | yes
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by the ephemeral public IP or by the private IP of the Management interface (eth0).                                                                                                                                                                                                        | string | Ephemeral Public IP (eth0) <br/> Private IP (eth0) | "Ephemeral Public IP (eth0)" | no |
 | management_name | The name of the Security Management Server as it appears in the autoprovisioning configuration. (Enter a valid Security Management name including lowercase letters, digits and hyphens only).                                                                                                                                                                        | string | N/A | "checkpoint-management" | no |

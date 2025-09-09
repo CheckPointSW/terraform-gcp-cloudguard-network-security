@@ -26,7 +26,7 @@ variable "prefix" {
 }
 variable "license" {
   type = string
-  description = "Checkpoint license (BYOL)."
+  description = "Checkpoint license (BYOL or PAYG)."
   default = "BYOL"
 }
 variable "image_name" {
