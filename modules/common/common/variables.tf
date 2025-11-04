@@ -8,8 +8,8 @@ variable "os_version" {
   description = "GAIA OS version"
   default = "R8120"
   validation {
-    condition = contains(["R8110", "R8120" , "R82"], var.os_version)
-    error_message = "Allowed values for os_version are 'R8110' , 'R8120', 'R82'"
+    condition = contains(["R8110", "R8120" , "R82", "R8210"], var.os_version)
+    error_message = "Allowed values for os_version are 'R8110' , 'R8120', 'R82', 'R8210'"
   }
 }
 variable "image_name" {
