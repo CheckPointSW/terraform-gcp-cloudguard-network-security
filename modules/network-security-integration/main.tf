@@ -96,7 +96,7 @@ module "network_ESP_firewall_rules" {
 module "security_network_allow_udp_6081_firewall" {
   source = "../common/firewall-rule"
   protocol = "udp"
-  source_ranges = [module.security_network_and_subnet.gateway_address]
+  source_ranges = ["${module.security_network_and_subnet.gateway_address}/32"]
   ports = ["6081"]
   rule_name = "${var.prefix}-data-network-allow-udp-6081"
   network = local.create_security_network_condition ? module.security_network_and_subnet.new_created_network_link : module.security_network_and_subnet.existing_network_link

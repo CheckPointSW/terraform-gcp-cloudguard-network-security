@@ -30,3 +30,8 @@ variable "subnetwork_name" {
   description = "Assigns the instance an IPv4 address from the subnetwork's range. Instances in different subnetworks can communicate with each other using their internal IPs as long as they belong to the same network."
   default = ""
 }
+variable "project" {
+  type = string
+  description = "The project in which the resource (network/subnetwork) belongs. If empty, the provider project is used."
+  default = ""
+}
