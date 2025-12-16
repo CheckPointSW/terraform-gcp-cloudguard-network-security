@@ -1,0 +1,143 @@
+output "cluster_new_created_network" {
+  value = module.cluster_network_and_subnet.new_created_network_name
+}
+
+output "cluster_new_created_subnet" {
+  value = module.cluster_network_and_subnet.new_created_subnet_name
+}
+
+output "mgmt_new_created_network" {
+  value = module.mgmt_network_and_subnet.new_created_network_name
+}
+
+output "mgmt_new_created_subnet" {
+  value = module.mgmt_network_and_subnet.new_created_subnet_name
+}
+
+output "int_network1_new_created_network" {
+  value = module.internal_network1_and_subnet.new_created_network_name
+}
+
+output "int_network1_new_created_subnet" {
+  value = module.internal_network1_and_subnet.new_created_subnet_name
+}
+
+output "int_network2_new_created_network" {
+  value = module.internal_network2_and_subnet[*].new_created_network_name
+}
+
+output "int_network2_new_created_subnet" {
+  value = module.internal_network2_and_subnet[*].new_created_subnet_name
+}
+
+output "int_network3_new_created_network" {
+  value = module.internal_network3_and_subnet[*].new_created_network_name
+}
+
+output "int_network3_new_created_subnet" {
+  value = module.internal_network3_and_subnet[*].new_created_subnet_name
+}
+
+output "int_network4_new_created_network" {
+  value = module.internal_network4_and_subnet[*].new_created_network_name
+}
+
+output "int_network4_new_created_subnet" {
+  value = module.internal_network4_and_subnet[*].new_created_subnet_name
+}
+
+output "int_network5_new_created_network" {
+  value = module.internal_network5_and_subnet[*].new_created_network_name
+}
+
+output "int_network5_new_created_subnet" {
+  value = module.internal_network5_and_subnet[*].new_created_subnet_name
+}
+
+output "int_network6_new_created_network" {
+  value = module.internal_network6_and_subnet[*].new_created_network_name
+}
+
+output "int_network6_new_created_subnet" {
+  value = module.internal_network6_and_subnet[*].new_created_subnet_name
+}
+
+output "cluster_icmp_firewall_rules" {
+  value = module.cluster_icmp_firewall_rules[*].firewall_rule_name
+}
+
+output "cluster_tcp_firewall_rules" {
+  value = module.cluster_tcp_firewall_rules[*].firewall_rule_name
+}
+
+output "cluster_udp_firewall_rules" {
+  value = module.cluster_udp_firewall_rules[*].firewall_rule_name
+}
+
+output "cluster_sctp_firewall_rules" {
+  value = module.cluster_sctp_firewall_rules[*].firewall_rule_name
+}
+
+output "cluster_esp_firewall_rules" {
+  value = module.cluster_esp_firewall_rules[*].firewall_rule_name
+}
+
+output "mgmt_icmp_firewall_rules" {
+  value = module.mgmt_icmp_firewall_rules[*].firewall_rule_name
+}
+
+output "mgmt_tcp_firewall_rules" {
+  value = module.mgmt_tcp_firewall_rules[*].firewall_rule_name
+}
+
+output "mgmt_udp_firewall_rules" {
+  value = module.mgmt_udp_firewall_rules[*].firewall_rule_name
+}
+
+output "mgmt_sctp_firewall_rules" {
+  value = module.mgmt_sctp_firewall_rules[*].firewall_rule_name
+}
+
+output "mgmt_esp_firewall_rules" {
+  value = module.mgmt_esp_firewall_rules[*].firewall_rule_name
+}
+
+output "cluster_ip_external_address" {
+  value = google_compute_address.primary_cluster_ip_ext_address[*].address
+}
+
+output "admin_password" {
+  value = var.generate_password ? [random_string.generated_password.result] : []
+}
+
+output "sic_key" {
+  value = var.sic_key
+}
+
+output "member_a_name" {
+  value = module.members_a_b.member_a_name
+}
+
+output "member_a_external_ip" {
+  value = module.members_a_b.member_a_external_ip
+}
+
+output "member_a_zone" {
+  value = var.zone_a
+}
+
+output "member_b_name" {
+  value = module.members_a_b.member_b_name
+}
+
+output "member_b_external_ip" {
+  value = module.members_a_b.member_b_external_ip
+}
+
+output "member_b_zone" {
+  value = var.zone_b
+}
+
+output "source_image" {
+  value = local.image_name
+}
