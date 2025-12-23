@@ -1,12 +1,5 @@
 # Check Point Network Security Integration Terraform module for Google Cloud Platform (GCP)
 
-> **Important Notes:**
-> - This is a preview release of the CloudGuard Network Security Integration Terraform module for GCP.
->  - The GCP Network Security Integration is currently in private preview.
-If you are interested in participating, please reach out to your local Check Point representative. They will contact the Check Point's Cloud Specialist (CSS) or Cloud Architect (CSA) that will gladly enroll you on the Early Availability (EA) program and offer additional documentation and assistance.
-
-
-
 This Terraform module deploys Check Point CloudGuard Network Security for the GCP Network Security Integration solution into new or existing VPCs.
 As part of the deployment, the following resources are created:
 
@@ -146,7 +139,6 @@ module "nsi-test" {
     version = "1.0.6"
 
     # --- Google Provider ---
-    service_account_path              = "service-accounts/service-account-file-name.json"
     project                           = "project-id"                    
     organization_id                   = "1111111111111"
 
@@ -227,7 +219,6 @@ Leave an empty list for a protocol if you want to disable traffic for it.
 ### Module's variables:
 | Name          | Description                                                                                                                                                                                                                                                                                                                                                           | Type          | Allowed values | Default       | Required      |
 | ------------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------- | ------------- | ------------- | ------------- |
-| service_account_path | User service account path in JSON format - From the service account key page in the Cloud Console, choose an existing account or create a new one. Next, download the JSON key file. Name it something you can remember, store it somewhere secure on your machine, and supply the path to the location where it is stored. (for example "service-accounts/service-account-name.json") | string  | N/A | "" | yes |
 | project  | Personal project ID. The project indicates the default GCP project in which all your resources will be created. The project ID must be 6-30 characters long, start with a letter, and can only include lowercase letters, numbers, hyphens, and cannot end with a hyphen.                                                                                                | string  | N/A | "" | yes
 | organization_id | Unique identifier for your organization in GCP. It is used to manage resources and permissions within your organization. [For more detailes](https://cloud.google.com/resource-manager/docs/creating-managing-organization)                                                                                                                                           | string  | N/A | "" | yes
 | prefix | (Optional) Resources name prefix. <br/> Note: resource name must not contain reserved words based on [sk40179](https://support.checkpoint.com/results/sk/sk40179).                                                                                                                                                                                                   | string | N/A | "chkp-tf-nsi" | no |

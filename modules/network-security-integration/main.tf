@@ -114,7 +114,6 @@ module "security_network_allow_tcp_8117_hc_ranges_firewall" {
 module "network-security-integration" {
   source = "../common/network-security-integration-common"
 
-  service_account_path = var.service_account_path
   project = var.project
   organization_id = var.organization_id
 

@@ -6,11 +6,6 @@ locals{
     disk_type_condition = var.disk_type == "SSD Persistent Disk" ? "pd-ssd" : var.disk_type == "Standard Persistent Disk" ? "pd-standard" : ""
     service_nic_interface_undefined = "x-chkp-topology-eth1--undefined"
 }
-provider "google-beta" {
-  credentials = var.service_account_path
-  project = var.project
-  region = var.region
-}
 
 resource "random_string" "generated_password" {
   length = 12
@@ -162,7 +157,6 @@ module "load_balancer" {
 }
 
 resource "google_network_security_intercept_deployment_group" "network_security_intercept_deployment_group" {
-  provider                      = google-beta
   project                       = var.project
   intercept_deployment_group_id = "${var.prefix}-intercept-deployment-group"
   location                      = "global"
@@ -170,7 +164,6 @@ resource "google_network_security_intercept_deployment_group" "network_security_
 }
 
 resource "google_network_security_intercept_deployment" "network_security_intercept_deployment" {
-  provider                   = google-beta
   for_each                   = toset(var.intercept_deployment_zones)
   intercept_deployment_id    = "${var.prefix}-intercept-deployment-${each.key}"
   location                   = each.key
@@ -180,7 +173,6 @@ resource "google_network_security_intercept_deployment" "network_security_interc
 }
 
 resource "google_network_security_intercept_endpoint_group" "network_security_intercept_endpoint_group" {
-  provider                      = google-beta
   intercept_endpoint_group_id   = "${var.prefix}-intercept-endpoint-group"
   project                       = var.project
   intercept_deployment_group    = google_network_security_intercept_deployment_group.network_security_intercept_deployment_group.id
@@ -188,7 +180,6 @@ resource "google_network_security_intercept_endpoint_group" "network_security_in
 }
 
 resource "google_network_security_intercept_endpoint_group_association" "network_security_intercept_endpoint_group_association" {
-  provider                                = google-beta
   intercept_endpoint_group_association_id = "${var.prefix}-intercept-endpoint-group-association"
   intercept_endpoint_group                = google_network_security_intercept_endpoint_group.network_security_intercept_endpoint_group.id
   network                                 = var.service_network[0]
@@ -197,7 +188,6 @@ resource "google_network_security_intercept_endpoint_group_association" "network
 }
 
 resource "google_network_security_security_profile" "network_security_profile" {
-    provider                 = google-beta
     name                     = "${var.prefix}-network-security-profile"
     custom_intercept_profile {
       intercept_endpoint_group = google_network_security_intercept_endpoint_group.network_security_intercept_endpoint_group.id
@@ -207,7 +197,6 @@ resource "google_network_security_security_profile" "network_security_profile" {
 }
 
 resource "google_network_security_security_profile_group" "network_security_profile_group" {
-  provider                  = google-beta
   name                      = "${var.prefix}-network-security-profile-group"
   custom_intercept_profile  = google_network_security_security_profile.network_security_profile.id
   parent                    = "organizations/${var.organization_id}"
@@ -219,7 +208,6 @@ resource "google_compute_network_firewall_policy" "consumer_policy" {
 }
 
 resource "google_compute_network_firewall_policy_rule" "ingress_network_firewall_policy" {
-  provider                = google-beta
   priority                = 10
   action                  = "apply_security_profile_group"
   firewall_policy         = google_compute_network_firewall_policy.consumer_policy.id
@@ -235,7 +223,6 @@ resource "google_compute_network_firewall_policy_rule" "ingress_network_firewall
 }
 
 resource "google_compute_network_firewall_policy_rule" "egress_network_firewall_policy" {
-  provider                = google-beta
   priority                = 11
   action                  = "apply_security_profile_group"
   firewall_policy         = google_compute_network_firewall_policy.consumer_policy.id

@@ -15,7 +15,8 @@ resource "google_compute_region_backend_service" "backend_service" {
   network               = var.network
   connection_draining_timeout_sec = var.connection_draining_timeout
   backend  {
-    group = var.instance_group
+    group          = var.instance_group
+    balancing_mode = "CONNECTION"
   }
 }
 
