@@ -22,7 +22,7 @@ provider "google" {
 
 module "example_module" {
     source  = "CheckPointSW/cloudguard-network-security/gcp//modules/cluster"
-    version = "1.0.6"
+    version = "~> 1.0"
 
     project_id = "my-project-id"
     prefix = "chkp-tf-ha"
@@ -80,12 +80,15 @@ module "example_module" {
 ## VPC
 For each network and subnet variable, you can choose whether to create a new network with a new subnet or to use an existing one.
 - If you want to create a new network and subnet, please input a subnet CIDR block for the desired new network - In this case, the network name and subnetwork name will not be used:
+
     ```
     cluster_network_cidr = "10.0.1.0/24"
     cluster_network_name = ""  # Leave empty when creating new network
     cluster_network_subnetwork_name = ""  # Leave empty when creating new network
     ```
+
 - Otherwise, if you want to use existing network and subnet, please leave empty double quotes in the CIDR variable for the desired network:
+
     ```
     cluster_network_cidr = ""
     cluster_network_name = "cluster-network"
@@ -94,6 +97,7 @@ For each network and subnet variable, you can choose whether to create a new net
 ## Firewall Rules
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter list of Source IP ranges.
 - For cluster:
+
     ```
     cluster_network_icmp_source_ranges = "123.123.0.0/24, 234.234.0.0/24"
     cluster_network_tcp_source_ranges = "0.0.0.0/0"
@@ -101,7 +105,9 @@ To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter
     cluster_network_sctp_source_ranges = ""
     cluster_network_esp_source_ranges = ""
     ```
+
 - For management:
+
     ```
     mgmt_network_icmp_source_ranges = "123.123.0.0/24, 234.234.0.0/24"
     mgmt_network_tcp_source_ranges = "0.0.0.0/0"
@@ -115,6 +121,7 @@ Please leave empty "" for a protocol if you want to disable traffic for it.
 ## Internal Networks
 The cluster members will each have a network interface in each internal network and create high priority routes that will route all outgoing traffic to the cluster member that is currently active.
 <br>Using internal networks depends on the variable num_internal_networks, by selecting a number in range 1 - 6 that represents the number of internal networks:
+
 ```
 num_internal_networks = 3
 internal_network1_cidr = ""
@@ -131,12 +138,15 @@ internal_network3_subnetwork_name = ""
 ## Images
 You can choose to either deploy with the latest image or with a custom image.
 - If you want to deploy with the latest image leave the `source_image` empty or with `"latest"` keyword and specify the `os_version` and `license`:
+
     ```
     source_image = ""
     os_version = "R82"
     license = "BYOL"
     ```
+
 - Otherwise specify the `source_image` with the path to the image:
+
     ```
     source_image = "check-point-r82-gw-byol-cluster-777-991001869-v20250727"
     os_version = ""  # Leave empty when specifying an image

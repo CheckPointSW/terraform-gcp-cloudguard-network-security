@@ -21,7 +21,7 @@ provider "google" {
 
 module "example_module" {
     source  = "CheckPointSW/cloudguard-network-security/gcp//modules/autoscale"
-    version = "1.0.6"
+    version = "~> 1.0"
 
     # --- Project Configuration ---
     project_id = "your-gcp-project-id"
@@ -72,12 +72,15 @@ module "example_module" {
 ## VPC
 For each network and subnet variable, you can choose whether to create a new network with a new subnet or to use an existing one.
 - If you want to create a new network and subnet, please input a subnet CIDR block for the desired new network - In this case, the network name and subnetwork name will not be used:
+
     ```
     external_network_name = ""                 # Leave empty when creating new network
     external_subnetwork_name = ""              # Leave empty when creating new network
     external_network_cidr = "10.0.1.0/24"
     ```
+
 - Otherwise, if you want to use existing network and subnet, please leave empty double quotes in the CIDR variable for the desired network:
+
     ```
     external_network_name = "network name"
     external_subnetwork_name = "subnetwork name"
@@ -86,17 +89,20 @@ For each network and subnet variable, you can choose whether to create a new net
 
 ## Multi-Project (Shared VPC) Support
 To attach the autoscale gateways to networks that live in a different host project (Shared VPC), set:
+
 ```
 project_id = "service-project-id"        # provider context
 external_network_project = "host-project-id"
 internal_network_project = "host-project-id"
 ```
+
 Leave the network project variable(s) empty when network(s) are in the same project.
 
 **Note:** All networks must reside in projects within the same GCP organization. Cross-organization Shared VPC is not supported.
 
 ## Firewall Rules
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter string of Source IP ranges seperated by comma:
+
 ```
 external_network_icmp_source_ranges = ""123.123.0.0/24, 234.234.0.0/24""
 external_network_tcp_source_ranges = "0.0.0.0/0"
@@ -110,12 +116,15 @@ Please leave empty `""` for a protocol if you want to disable traffic for it.
 ## Images
 You can choose to either deploy with the latest image or with a custom image.
 - If you want to deploy with the latest image leave the `source_image` empty or with `"latest"` keyword and specify the `os_version` and `license`:
+
     ```
     source_image = ""
     os_version = "R82"
     license = "BYOL"
     ```
+
 - Otherwise specify the `source_image` with the path to the image:
+
     ```
     source_image = "check-point-r82-gw-byol-mig-777-991001866-v20250731"
     os_version = ""                            # Leave empty when using specific image
