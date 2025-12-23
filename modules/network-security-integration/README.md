@@ -136,7 +136,7 @@ provider "google" {
 
 module "nsi-test" {
     source  = "CheckPointSW/cloudguard-network-security/gcp//modules/network-security-integration"
-    version = "1.0.6"
+    version = "~> 1.0"
 
     # --- Google Provider ---
     project                           = "project-id"                    

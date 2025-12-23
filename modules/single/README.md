@@ -20,7 +20,7 @@ provider {
 
 module "example_module" {
     source  = "CheckPointSW/cloudguard-network-security/gcp//modules/single"
-    version = "1.0.6"
+    version = "~> 1.0"
 
     # --- Project Configuration ---
     project_id                           = "your-gcp-project-id"
@@ -69,11 +69,13 @@ module "example_module" {
 ## VPC
 For each network and subnet variable, you can choose whether to create a new network with a new subnet or to use an existing one.
 - If you want to create a new network and subnet, please input a subnet CIDR block for the desired new network - In this case, the network name and subnetwork name will not be used:
+
     ```
     network_cidr = "10.0.1.0/24"
     network_name = ""       # Leave empty when specifying a CIDR
     subnetwork_name = ""    # Leave empty when specifying a CIDR
     ```
+
 - Otherwise, if you want to use existing network and subnet, please leave empty double quotes in the CIDR variable for the desired network:
 
     ```
@@ -84,12 +86,14 @@ For each network and subnet variable, you can choose whether to create a new net
 
 ## Multi-Project (Shared VPC) Support
 To attach the management or single gateway to networks that live in a different host project (Shared VPC), set:
+
 ```
 project_id = "service-project-id"        # provider context
 network_project = "host-project-id"      # external network lives here
 # For additional internal networks in single gateway deployments: 
 internal_network1_project = "host-project-id"  # internal network lives here (when using additional networks)
 ```
+
 Leave the network project variable(s) empty when network(s) are in the same project.
 ### Limitation
 Shared VPC is not supported across organizations. The host project and service project must be in the same organization.
@@ -97,6 +101,7 @@ Shared VPC is not supported across organizations. The host project and service p
 
 ## Firewall Rules
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter list of Source IP ranges.
+
 ```
 ICMP_traffic = "123.123.0.0/24, 234.234.0.0/24"
 TCP_traffic = "0.0.0.0/0"
@@ -110,13 +115,16 @@ Please leave empty "" for a protocol if you want to disable traffic for it.
 ## Images
 You can choose to either deploy with the latest image or with a custom image.
 - If you want to deploy with the latest image leave the `source_image` empty or with `"latest"` keyword and specify the `os_version`, `license`, and `installation_type`:
+
   ```
   source_image = ""
   os_version = "R82"
   license = "BYOL"
   installation_type = "Gateway only"
   ```
+
 - Otherwise specify the `source_image` with the path to the image:
+
   ```
   source_image = "check-point-r82-gw-byol-single-777-991001869-v20250727"
   os_version = ""     # Leave empty when specifying an image
