@@ -171,7 +171,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | prefix | The prefix to use for resource naming | string | N/A | "chkp-tf-ha" | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/> PAYG;<br/> | "BYOL" | No |
 | source_image | The High Availability (cluster) image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | N/A | "" | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82; | "R82" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | No |
 | zone_a | Member A Zone. The zone determines what computing resources are available and where your data is stored and used.  | string  | N/A | "us-central1-a" | No |
 | zone_b | Member B Zone.  | string  | N/A | "us-central1-a" | No |
 | machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n1-standard-4" | No |

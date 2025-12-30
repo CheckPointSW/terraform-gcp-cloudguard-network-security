@@ -156,7 +156,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | project_id | Personal project ID. The project indicates the default GCP project all of your resources will be created in. The project ID must be 6-30 characters long, start with a letter, and can only include lowercase letters, numbers, hyphenst and cannot end with a hyphen. | string | N/A | "" | Yes |
 | zone | The zone determines what computing resources are available and where your data is stored and used. | string | List of allowed [Regions and Zones](https://cloud.google.com/compute/docs/regions-zones?_ga=2.31926582.-962483654.1585043745) | us-central1-a | Yes |
 | source_image | The single gateway or management image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | "" | N/A | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82; | "R82" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | No |
 | installation_type | Installation type. Required only if you choose to get the latest image. | string | Gateway only;<br/> Management only;<br/> Manual Configuration;<br/>Gateway and Management (Standalone); | Gateway only | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/>PAYG; | BYOL | No |
 | prefix | The prefix to use for resource naming | string | N/A | chkp-single-tf | No |

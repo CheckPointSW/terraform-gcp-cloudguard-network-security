@@ -39,7 +39,7 @@ variable "image_name" {
 variable "os_version" {
   type = string
   description = "GAIA OS version"
-  default = "R8120"
+  default = "R82"
 }
 variable "management_nic" {
   type = string
