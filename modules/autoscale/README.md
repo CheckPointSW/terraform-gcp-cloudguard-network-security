@@ -150,7 +150,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | prefix | The prefix to use for resource naming <br/> Note: resource name must not contain reserved words based on: sk40179.  | string | N/A | "chkp-tf-mig" | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/> PAYG;<br/> | "BYOL" | No |
 | source_image | The autoscaling (MIG) image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | N/A | "" | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82; | "R82" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | No |
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by an ephemeral public IP or using the private IP of the internal interface (eth1). | string | Ephemeral Public IP (eth0);<br/> Private IP (eth1); | "Ephemeral Public IP (eth0)" | No |
 | management_name | The name of the Security Management Server as appears in autoprovisioning configuration. (Please enter a valid Security Management name including lowercase letters, digits and hyphens only). | string | N/A | "checkpoint-management" | No |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Please enter a valid autoprovisioing configuration template name including lowercase letters, digits and hyphens only). | string | N/A | "gcp-asg-autoprov-tmplt" | No |

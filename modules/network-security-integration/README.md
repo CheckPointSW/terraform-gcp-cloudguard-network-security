@@ -118,6 +118,8 @@ This module supports deployment with the following Check Point CloudGuard gatewa
 
 | Version | Image Name | License |
 |---------|------------|-------------|
+| R82.10 | `check-point-r8210-gw-byol-nsi-464-991001970-v20251229` | BYOL |
+| R82.10 | `check-point-r8210-gw-payg-nsi-464-991001970-v20251229` | PAYG |
 | R82 | `check-point-r82-gw-byol-nsi-777-991001897-v20250904` | BYOL |
 | R82 | `check-point-r82-gw-payg-nsi-777-991001897-v20250904` | PAYG |
 | R81.20 | `check-point-r8120-gw-byol-nsi-631-991001896-v20250903` | BYOL |
@@ -145,8 +147,8 @@ module "nsi-test" {
     # --- Check Point---
     prefix                            = "chkp-tf-nsi"
     license                           = "BYOL"
-    image_name                        = "check-point-r8120-gw-byol-nsi-631-991001896-v20250903"
-    os_version                        = "R8120"
+    image_name                        = "check-point-r82-gw-byol-nsi-777-991001897-v20250904"
+    os_version                        = "R82"
     management_nic                    = "Ephemeral Public IP (eth0)"
     management_name                   = "tf-checkpoint-management"
     configuration_template_name       = "tf-checkpoint-template"
@@ -224,7 +226,7 @@ Leave an empty list for a protocol if you want to disable traffic for it.
 | prefix | (Optional) Resources name prefix. <br/> Note: resource name must not contain reserved words based on [sk40179](https://support.checkpoint.com/results/sk/sk40179).                                                                                                                                                                                                   | string | N/A | "chkp-tf-nsi" | no |
 | license | Check Point license (BYOL or PAYG).                                                                                                                                                                                                                                                                                                                                    | string | BYOL <br/> PAYG <br/> | "BYOL" | no |
 | image_name | The NSI image name (for example, check-point-r8120-gw-byol-nsi-631-991001896-v20250903).                                                                                                | string | N/A | N/A | yes |
-| os_version | Gaia OS Version                                                                                                                                                                                                                                                                                                                                                       | string | R8110;<br/> R8120;<br/> R82; | "R8120" | yes
+| os_version | Gaia OS Version                                                                                                                                                                                                                                                                                                                                                       | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | yes
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by the ephemeral public IP or by the private IP of the Management interface (eth0).                                                                                                                                                                                                        | string | Ephemeral Public IP (eth0) <br/> Private IP (eth0) | "Ephemeral Public IP (eth0)" | no |
 | management_name | The name of the Security Management Server as it appears in the autoprovisioning configuration. (Enter a valid Security Management name including lowercase letters, digits and hyphens only).                                                                                                                                                                        | string | N/A | "checkpoint-management" | no |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Enter a valid autoprovisioning configuration template name including lowercase letters, digits, and hyphens only).                                                                                                                                                                 | string | N/A | "gcp-asg-autoprov-tmplt" | no |
