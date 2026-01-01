@@ -13,10 +13,11 @@ output "instance_group_manager_name" {
 output "autoscaler_name" {
   value = google_compute_region_autoscaler.autoscaler.name
 }
-output "security_policy_id" {
-  value = google_compute_network_firewall_policy.consumer_policy.id
+output "intercept_deployment_group_id" {
+  value = google_network_security_intercept_deployment_group.network_security_intercept_deployment_group.id
+  description = "The ID of the intercept deployment group (needed for consumer setup)."
 }
-output "intercept_endpoint_group_id" {
-  value = google_network_security_intercept_endpoint_group.network_security_intercept_endpoint_group.id
-  description = "The ID of the intercept endpoint group."
+output "forwarding_rule" {
+  value = module.load_balancer.forwarding_rule
+  description = "Map of forwarding rules by zone"
 }

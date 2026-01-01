@@ -37,6 +37,7 @@ resource "google_compute_instance_template" "instance_template" {
   network_interface {
     network = var.mgmt_network[0]
     subnetwork = var.mgmt_subnetwork[0]
+    stack_type = "IPV4_ONLY"
     dynamic "access_config" {
       for_each = local.mgmt_nic_condition ? [
         1] : []
@@ -49,6 +50,7 @@ resource "google_compute_instance_template" "instance_template" {
   network_interface {
     network = var.security_network[0]
     subnetwork = var.security_subnetwork[0]
+    stack_type = "IPV4_ONLY"
   }
 
   scheduling {
@@ -74,7 +76,8 @@ resource "google_compute_instance_template" "instance_template" {
     "checkpoint-gateway",
     local.mgmt_nic_ip_address_condition,
     local.mgmt_nic_interface_condition,
-    local.service_nic_interface_undefined
+    local.service_nic_interface_undefined,
+    "x-chkp-ip-version--ipv4-only"
     ]
 
   metadata = local.admin_SSH_key_condition ? {
@@ -86,7 +89,7 @@ resource "google_compute_instance_template" "instance_template" {
     adminPasswordSourceMetadata = var.generate_password?random_string.generated_password.result : ""
   }
 
-  metadata_startup_script = templatefile("${path.module}/../startup-script.sh", {
+  metadata_startup_script = templatefile("${path.module}/startup-script.sh", {
     // script's arguments
     generatePassword = var.generate_password
     config_url = ""
@@ -142,7 +145,7 @@ resource "google_compute_region_autoscaler" "autoscaler" {
 }
 
 module "load_balancer" {
-  source = "../internal-load-balancer"
+  source = "../../common/internal-load-balancer"
   project = var.project
   prefix = var.prefix
   network = var.security_network[0]
@@ -167,79 +170,7 @@ resource "google_network_security_intercept_deployment" "network_security_interc
   for_each                   = toset(var.intercept_deployment_zones)
   intercept_deployment_id    = "${var.prefix}-intercept-deployment-${each.key}"
   location                   = each.key
-  project                    = var.project 
+  project                    = var.project
   forwarding_rule            = module.load_balancer.forwarding_rule[each.key]
   intercept_deployment_group = google_network_security_intercept_deployment_group.network_security_intercept_deployment_group.id
-}
-
-resource "google_network_security_intercept_endpoint_group" "network_security_intercept_endpoint_group" {
-  intercept_endpoint_group_id   = "${var.prefix}-intercept-endpoint-group"
-  project                       = var.project
-  intercept_deployment_group    = google_network_security_intercept_deployment_group.network_security_intercept_deployment_group.id
-  location                      = "global"
-}
-
-resource "google_network_security_intercept_endpoint_group_association" "network_security_intercept_endpoint_group_association" {
-  intercept_endpoint_group_association_id = "${var.prefix}-intercept-endpoint-group-association"
-  intercept_endpoint_group                = google_network_security_intercept_endpoint_group.network_security_intercept_endpoint_group.id
-  network                                 = var.service_network[0]
-  location                                = "global"
-  project                                 = var.project 
-}
-
-resource "google_network_security_security_profile" "network_security_profile" {
-    name                     = "${var.prefix}-network-security-profile"
-    custom_intercept_profile {
-      intercept_endpoint_group = google_network_security_intercept_endpoint_group.network_security_intercept_endpoint_group.id
-    } 
-    type                     = "CUSTOM_INTERCEPT"
-    parent                   = "organizations/${var.organization_id}" 
-}
-
-resource "google_network_security_security_profile_group" "network_security_profile_group" {
-  name                      = "${var.prefix}-network-security-profile-group"
-  custom_intercept_profile  = google_network_security_security_profile.network_security_profile.id
-  parent                    = "organizations/${var.organization_id}"
-}
-
-resource "google_compute_network_firewall_policy" "consumer_policy" {
-  name    = "${var.prefix}-consumer-policy"
-  project = var.project
-}
-
-resource "google_compute_network_firewall_policy_rule" "ingress_network_firewall_policy" {
-  priority                = 10
-  action                  = "apply_security_profile_group"
-  firewall_policy         = google_compute_network_firewall_policy.consumer_policy.id
-  security_profile_group  = "//networksecurity.googleapis.com/${google_network_security_security_profile_group.network_security_profile_group.id}"
-  direction               = "INGRESS"
-  match {
-    layer4_configs {
-      ip_protocol = "all"
-    }
-    src_ip_ranges = ["0.0.0.0/0"]
-    dest_ip_ranges = ["0.0.0.0/0"]
-  }
-}
-
-resource "google_compute_network_firewall_policy_rule" "egress_network_firewall_policy" {
-  priority                = 11
-  action                  = "apply_security_profile_group"
-  firewall_policy         = google_compute_network_firewall_policy.consumer_policy.id
-  security_profile_group  = "//networksecurity.googleapis.com/${google_network_security_security_profile_group.network_security_profile_group.id}"
-  direction               = "EGRESS"
-  match {
-    layer4_configs {
-      ip_protocol = "all"
-    }
-    src_ip_ranges = ["0.0.0.0/0"]
-    dest_ip_ranges = ["0.0.0.0/0"]
-  }
-}
-
-resource "google_compute_network_firewall_policy_association" "network_firewall_policy_association" {
-  name               = "${var.prefix}-consumer-policy-association"
-  firewall_policy    = google_compute_network_firewall_policy.consumer_policy.id
-  attachment_target  = var.service_network[0]
-  project            = var.project
 }
