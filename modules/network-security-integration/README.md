@@ -7,7 +7,7 @@ This Terraform module deploys Check Point CloudGuard Network Security for the GC
 For additional information, see the [CloudGuard Network for GCP Network Security Integration Deployment Guide](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Default.htm)
 
 ## Architecture
-![NSI Architecture](nsi-architecture.png)
+![NSI Architecture](https://raw.githubusercontent.com/CheckPointSW/terraform-gcp-cloudguard-network-security/master/modules/network-security-integration/nsi-architecture.png)
 
 ## Cross-Zone Deployment
 
