@@ -11,11 +11,6 @@ variable "project" {
   }
 }
 
-variable "organization_id" {
-  type = string
-  description = "Organization ID - The organization ID is a unique identifier for your organization in GCP. It is used to manage resources and permissions within your organization."
-  default = ""
-}
 
 # --- Check Point---
 variable "prefix" {
@@ -27,14 +22,11 @@ variable "license" {
   type = string
   description = "Checkpoint license (BYOL or PAYG)."
   default = "BYOL"
-  validation {
-    condition = contains(["BYOL" , "PAYG"] , var.license)
-    error_message = "Allowed licenses are 'BYOL' or 'PAYG'"
-  }
 }
-variable "image_name" {
+variable "source_image" {
   type = string
-  description = "The NSI image name (e.g. check-point-r8120-gw-byol-nsi-631-991001866-v20250731)."
+  description = "The custom source image to use. Leave empty or set to 'latest' to use os_version and license to select image."
+  default = ""
 }
 variable "os_version" {
   type = string
@@ -115,7 +107,6 @@ data "google_compute_zones" "available_zones" {
 variable "intercept_deployment_zones" {
   type = list(string)
   description = "The list of zones for which a network security intercept deployment will be deployed. The zones must be in the same region as the deployment."
-  default = ["us-central1-a"]
   validation {
     condition = length(var.intercept_deployment_zones) > 0
     error_message = "The intercept_deployment_zones variable must contain at least one zone."
@@ -134,35 +125,37 @@ variable "mgmt_network_cidr" {
   description = "The range of external addresses that are owned by this network, only IPv4 is supported (e.g. \"10.0.0.0/8\" or \"192.168.0.0/16\")."
   default = "10.0.1.0/24"
 }
+
 variable "security_network_cidr" {
   type = string
   description = "The range of internal addresses that are owned by this network, only IPv4 is supported (e.g. \"10.0.0.0/8\" or \"192.168.0.0/16\")."
   default = "10.0.2.0/24"
 }
-variable "ICMP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for ICMP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable ICMP traffic."
-  default = []
+
+variable "mgmt_network_icmp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for ICMP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable ICMP traffic."
+  default = ""
 }
-variable "TCP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for TCP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable TCP traffic."
-  default = []
+variable "mgmt_network_tcp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for TCP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable TCP traffic."
+  default = ""
 }
-variable "UDP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for UDP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable UDP traffic."
-  default = []
+variable "mgmt_network_udp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for UDP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable UDP traffic."
+  default = ""
 }
-variable "SCTP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for SCTP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable SCTP traffic."
-  default = []
+variable "mgmt_network_sctp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for SCTP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable SCTP traffic."
+  default = ""
 }
-variable "ESP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for ESP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable ESP traffic."
-  default = []
+variable "mgmt_network_esp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for ESP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable ESP traffic."
+  default = ""
 }
 
 # --- Instance Configuration ---
@@ -229,25 +222,6 @@ variable "enable_monitoring" {
   description = "Enable Stackdriver monitoring"
   default = false
 }
-
-variable "service_network_name" {
-  type = string
-  description = "The network determines what network traffic the instance can access"
-  default = ""
-}
-
-variable "service_subnetwork_name" {
-  type = string
-  description = "Assigns the instance an IPv4 address from the subnetwork's range. Instances in different subnetworks can communicate with each other using their internal IPs as long as they belong to the same network."
-  default = ""
-}
-
-variable "service_network_cidr" {
-  type = string
-  description = "The range of external addresses that are owned by this network, only IPv4 is supported (e.g. \"10.0.0.0/8\" or \"192.168.0.0/16\")."
-  default = "10.0.3.0/24"
-}
-
 variable "connection_draining_timeout" {
     type = number
     description = "The time, in seconds, that the load balancer waits for active connections to complete before fully removing an instance from the backend group. The default value is 300 seconds."

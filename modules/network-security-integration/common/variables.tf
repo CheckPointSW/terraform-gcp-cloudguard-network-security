@@ -7,12 +7,6 @@ variable "project" {
   default = ""
 }
 
-variable "organization_id" {
-  type = string
-  description = "Organization ID - The organization ID is a unique identifier for your organization. It is used to identify your organization in the Google Cloud Console and in API requests."
-  default = "" 
-}
-
 # --- Check Point---
 variable "prefix" {
   type = string
@@ -90,7 +84,6 @@ variable "region" {
 variable "intercept_deployment_zones" {
   type = list(string)
   description = "The list of zones for which a network security intercept deployment will be deployed. The zones must be in the same region as the deployment."
-  default = ["us-central1-a"]
 }
 variable "mgmt_network" {
   type = list(string)
@@ -102,7 +95,6 @@ variable "mgmt_subnetwork" {
   description = "The subnetwork determines what network traffic the instance can access"
   default = ["default"]
 }
-
 variable "security_network" {
   type = list(string)
   description = "The network determines what network traffic the instance can access"
@@ -113,44 +105,30 @@ variable "security_subnetwork" {
   description = "The subnetwork determines what network traffic the instance can access"
   default = ["default"]
 }
-
-variable "service_network" {
-  type = list(string)
-  description = "The network determines what network traffic the instance can access"
-  default = ["default"]
+variable "mgmt_network_icmp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for ICMP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation. Leave empty to disable ICMP traffic."
+  default = ""
 }
-
-variable "service_subnetwork" {
-  type = list(string)
-  description = "The subnetwork determines what network traffic the instance can access"
-  default = ["default"]
-  
+variable "mgmt_network_tcp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for TCP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation. Leave empty to disable TCP traffic."
+  default = ""
 }
-
-variable "ICMP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for ICMP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable ICMP traffic."
-  default = []
+variable "mgmt_network_udp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for UDP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation. Leave empty to disable UDP traffic."
+  default = ""
 }
-variable "TCP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for TCP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable TCP traffic."
-  default = []
+variable "mgmt_network_sctp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for SCTP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation. Leave empty to disable SCTP traffic."
+  default = ""
 }
-variable "UDP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for UDP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable UDP traffic."
-  default = []
-}
-variable "SCTP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for SCTP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable SCTP traffic."
-  default = []
-}
-variable "ESP_traffic" {
-  type = list(string)
-  description = "(Optional) Source IP ranges for ESP traffic - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. Please leave empty list to unable ESP traffic."
-  default = []
+variable "mgmt_network_esp_traffic" {
+  type = string
+  description = "(Optional) Source IP ranges for ESP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation. Leave empty to disable ESP traffic."
+  default = ""
 }
 
 # --- Instance Configuration ---
