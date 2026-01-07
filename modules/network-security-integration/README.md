@@ -57,6 +57,7 @@ compute.healthChecks.delete
 compute.healthChecks.get
 compute.healthChecks.useReadOnly
 compute.instanceGroups.use
+compute.instances.setLabels
 compute.networks.create
 compute.networks.delete
 compute.networks.setFirewallPolicy
