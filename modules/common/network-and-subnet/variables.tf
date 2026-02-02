@@ -35,3 +35,34 @@ variable "project" {
   description = "The project in which the resource (network/subnetwork) belongs. If empty, the provider project is used."
   default = ""
 }
+
+variable "ip_stack_type" {
+  type = string
+  description = "The IP stack type for this network. Possible values are IPV4_ONLY and IPV4_IPV6."
+  default = "IPV4_ONLY"
+  validation {
+    condition = contains(["IPV4_ONLY", "IPV4_IPV6"], var.ip_stack_type)
+    error_message = "ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
+  }
+}
+
+variable "ipv6_access_type" {
+  type = string
+  description = "The IPv6 access type for this subnetwork. Possible values are EXTERNAL and INTERNAL."
+  default = "EXTERNAL"
+  validation {
+    condition = contains(["EXTERNAL", "INTERNAL"], var.ipv6_access_type)
+    error_message = "ipv6_access_type must be either EXTERNAL or INTERNAL."
+  }
+}
+
+variable "network_ipv6_ula" {
+  type = string
+  description = "The IPv6 ULA range for the internal network. Required when stack_type is IPV4_IPV6. Must be a valid ULA range (fd20::/20) with /48 prefix."
+  default = ""
+  
+  validation {
+    condition = var.network_ipv6_ula == "" || can(regex("^fd20::/48$|^fd20:(?:[0-9a-fA-F]{1,3}|0[0-9a-fA-F]{3})::/48$|^fd20:(?:[0-9a-fA-F]{1,3}|0[0-9a-fA-F]{3}):(?:[0-9a-fA-F]{1,4})::/48$", var.network_ipv6_ula))
+    error_message = "The network_ipv6_ula must be a valid IPv6 ULA range in Google Cloud's fd20::/20 space with /48 prefix (e.g., 'fd20::/48', 'fd20:0abc::/48', 'fd20:123:def::/48')."
+  }
+}

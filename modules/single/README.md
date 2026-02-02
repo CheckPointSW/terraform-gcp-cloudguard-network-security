@@ -1,6 +1,6 @@
 # Check Point CloudGuard Single Gateway and Management
 
-Terraform module which deploys a single gateway and management of Check Point Security Gateways.
+Terraform module which deploys a single gateway and management of Check Point Security Gateways with IPv4 and IPv6 dual-stack support.
 
 These types of Terraform resources are supported:
 - [Instance Template](https://www.terraform.io/docs/providers/google/r/compute_instance_template.html)
@@ -11,11 +11,14 @@ These types of Terraform resources are supported:
 See Check Point's documentation for Single [here](https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk114577).
 
 ## Usage
+
+### Basic IPv4 Deployment
+
 ```hcl
-provider {
-    service_account_path = file("service-accounts/service-account-file-name.json")
-    project              = "project-id"
-    region               = "region"
+provider "google" {
+    credentials = "path/to/service-account-key.json"
+    project     = "project-id"
+    region      = "region"
 }
 
 module "example_module" {
@@ -66,6 +69,82 @@ module "example_module" {
 }
 ```
 
+<details>
+<summary><b>Click to expand: IPv6 Dual-Stack Deployment Example</b></summary>
+
+```hcl
+provider "google" {
+    credentials = "path/to/service-account-key.json"
+    project     = "project-id"
+    region      = "region"
+}
+
+module "example_ipv6_module" {
+    source  = "CheckPointSW/cloudguard-network-security/gcp//modules/single"
+    version = "~> 1.0"
+
+    # --- Project Configuration ---
+    project_id                           = "your-gcp-project-id"
+    
+    prefix                               = "chkp-single-ipv6-"
+    source_image                         = ""
+    os_version                           = "R82"
+    license                              = "BYOL"
+    installation_type                    = "Gateway only"
+    management_interface                 = "Ephemeral Public IP (eth0)"
+    admin_shell                          = "/etc/cli.sh"
+    public_ssh_key                       = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxxxx imported-openssh-key"
+    maintenance_mode_password            = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    generate_password                    = false
+    allow_upload_download                = true
+    sic_key                              = "xxxxxxxxx"
+    management_gui_client_network        = "0.0.0.0/0"
+
+    # --- Quick connect to Smart-1 Cloud ---
+    smart_1_cloud_token                  = "xxxxxxxxxxxxxxxxxxxxxxxx"
+
+    # --- IPv6 Dual-Stack Configuration ---
+    ip_stack_type                        = "IPV4_IPV6"
+    
+    # --- Networking ---
+    zone                                 = "us-central1-a"
+    network_name                         = ""
+    subnetwork_name                      = ""
+    network_cidr                         = "10.0.0.0/24"
+    network_ipv6_ula                     = ""  # Leave empty for auto-generation
+    external_ip                          = "static"
+    
+    # --- IPv4 Firewall Rules ---
+    network_tcp_source_ranges            = "0.0.0.0/0"
+    network_icmp_source_ranges           = ""
+    network_udp_source_ranges            = ""
+    network_sctp_source_ranges           = ""
+    network_esp_source_ranges            = ""
+    
+    # --- IPv6 Firewall Rules ---
+    network_tcp_ipv6_source_ranges       = "::/0"
+    network_icmp_ipv6_source_ranges      = ""
+    network_udp_ipv6_source_ranges       = ""
+    network_sctp_ipv6_source_ranges      = ""
+    network_esp_ipv6_source_ranges       = ""
+    
+    # --- Additional Networks ---
+    num_additional_networks              = 1
+    internal_network1_name               = ""
+    internal_network1_subnetwork_name    = ""
+    internal_network1_cidr               = "10.0.1.0/24"
+    internal_network1_ipv6_ula           = ""  # Leave empty for auto-generation
+
+    # --- Instance Configuration ---
+    machine_type                         = "n1-standard-4"
+    boot_disk_type                       = "SSD Persistent Disk"
+    boot_disk_size                       = 100
+    enable_monitoring                    = false
+}
+```
+
+</details>
+
 ## VPC
 For each network and subnet variable, you can choose whether to create a new network with a new subnet or to use an existing one.
 - If you want to create a new network and subnet, please input a subnet CIDR block for the desired new network - In this case, the network name and subnetwork name will not be used:
@@ -98,6 +177,35 @@ Leave the network project variable(s) empty when network(s) are in the same proj
 ### Limitation
 Shared VPC is not supported across organizations. The host project and service project must be in the same organization.
 
+## IPv6 Dual-Stack Support
+This module supports IPv6 dual-stack networking alongside IPv4. To enable IPv6:
+
+1. Set `ip_stack_type = "IPV4_IPV6"` to enable dual-stack support
+2. Configure IPv6 ULA ranges for networks:
+   ```hcl
+   network_ipv6_ula = ""                              # External network IPv6 ULA (leave empty - uses external access type)
+   internal_network1_ipv6_ula = ""                    # Internal network IPv6 ULA (leave empty for auto-generation)
+   ```
+   **Recommendation**: Leave IPv6 ULA ranges empty (`""`) for all networks. External networks use external access type and will not generate ULA ranges (unless external_ip is set to none), while internal networks will have GCP automatically generate valid ULA ranges.
+
+3. Configure IPv6 firewall rules (optional):
+   ```hcl
+   network_tcp_ipv6_source_ranges = "::/0"           # Allow IPv6 TCP from anywhere
+   network_icmp_ipv6_source_ranges = ""              # Disable IPv6 ICMP
+   ```
+
+**IPv6 Access Types:**
+- **External networks**: Get global IPv6 addresses (not ULA) when `external_ip != "none"`
+- **Internal networks**: Use ULA IPv6 addresses for private communication
+- **Private IPv6 only**: Set `external_ip = "none"` for internal ULA IPv6 only
+
+**IPv6 ULA Requirements:**
+- Must use `fd20::/20` prefix range (fd20:0000:0000::/48 to fd20:0fff:ffff::/48)
+- Must be `/48` network size
+- Examples: `fd20:0123:4567::/48`, `fd20:0abc:def0::/48`, `fd20:0999:1234::/48`
+- **Important**: Once a ULA range has been used, it cannot be reused (even if the network has been deleted)
+- **Note**: When deploying a new VPC and specifying a ULA field, the corresponding CIDR field is **mandatory** (e.g., if specifying `network_ipv6_ula`, then `network_cidr` is required; if specifying `internal_network1_ipv6_ula`, then `internal_network1_cidr` is required)
+- **Recommendation**: Leave IPv6 ULA ranges empty (`""`). When deploying a new VPC with only the CIDR field specified (and ULA left empty), GCP will automatically generate valid ULA ranges for private networks
 
 ## Firewall Rules
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter list of Source IP ranges.
@@ -164,11 +272,19 @@ If you want to deploy with a specific image you can checkout this section to get
 | network_name | network ID in the chosen zone. The network determines what network traffic the instance can. | string | N/A | N/A | No |
 | subnetwork_name | subNetwork ID in the chosen zone. The subNetwork determines what network traffic the instance can access. | string | N/A| N/A | No |
 | network_cidr | The range of internal addresses that are owned by this network, only IPv4 is supported (e.g. "10.0.0.0/8" or "192.168.0.0/16"). | string | N/A | "" | No |
+| network_ipv6_ula | The IPv6 ULA range for the external network. Use this field when the network is private (external_ip = "none"). Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20 (fd20:0000:0000::/48 to fd20:0fff:ffff::/48). | string | fd20:0xxx:xxxx::/48 | "" | No |
+| network_project | The project ID where the external network/subnetwork reside (shared VPC host). Empty -> same as provider project. | string | N/A | "" | No |
+| ip_stack_type | The IP stack type for network interfaces. Set to IPV4_IPV6 for dual-stack support. | string | IPV4_ONLY;<br/>IPV4_IPV6; | IPV4_ONLY | No |
 | TCP_traffic | Allow TCP traffic from the Internet. For multiple ranges split them by a comma e.g. "123.123.0.0/0, 234.234.0.0./0". | string | Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For gateway all ports are allowed. For management allowed ports are: 257,18191,18210,18264,22,443,18190,19009 [Learn more](https://cloud.google.com/vpc/docs/vpc?_ga=2.36703144.-962483654.1585043745#firewalls)| N/A | No |
 | ICMP_traffic | Source IP ranges for ICMP traffic. For multiple ranges split them by a comma e.g. "123.123.0.0/0, 234.234.0.0./0". | string | Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For gateway only. [Learn more](https://cloud.google.com/vpc/docs/vpc?_ga=2.36703144.-962483654.1585043745#firewalls) | N/A | No |
 | UDP_traffic | Source IP ranges for UDP traffic. For multiple ranges split them by a comma e.g. "123.123.0.0/0, 234.234.0.0./0". | string | Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For gateway only - all ports are allowed. [Learn more](https://cloud.google.com/vpc/docs/vpc?_ga=2.36703144.-962483654.1585043745#firewalls) | N/A | No |
 | SCTP_traffic | Source IP ranges for SCTP traffic. For multiple ranges split them by a comma e.g. "123.123.0.0/0, 234.234.0.0./0". | string | Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For gateway only - all ports are allowed. [Learn more](https://cloud.google.com/vpc/docs/vpc?_ga=2.36703144.-962483654.1585043745#firewalls) | N/A | No |
 | ESP_traffic | Source IP ranges for ESP traffic. For multiple ranges split them by a comma e.g. "123.123.0.0/0, 234.234.0.0./0". | string | Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For gateway only. [Learn more](https://cloud.google.com/vpc/docs/vpc?_ga=2.36703144.-962483654.1585043745#firewalls) | N/A | No |
+| network_tcp_ipv6_source_ranges | Source IPv6 ranges for TCP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway all ports are allowed. | "" | No |
+| network_icmp_ipv6_source_ranges | Source IPv6 ranges for ICMP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only. | "" | No |
+| network_udp_ipv6_source_ranges | Source IPv6 ranges for UDP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only - all ports are allowed. | "" | No |
+| network_sctp_ipv6_source_ranges | Source IPv6 ranges for SCTP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only - all ports are allowed. | "" | No |
+| network_esp_ipv6_source_ranges | Source IPv6 ranges for ESP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only. | "" | No |
 | boot_disk_type | Disk type. | string | SSD Persistent Disk;<br/>standard-Persistent Disk;<br/>Storage space is much less expensive for a standard persistent disk. An SSD persistent disk is better for random IOPS or streaming throughput with low latency. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.66020774.-962483654.1585043745#overview_of_disk_types) | SSD Persistent Disk | No |
 | boot_disk_size | Disk size in GB. | number | Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.232680471.-962483654.1585043745#pdperformance) | 100 | No |
 | generate_password | Automatically generate an administrator password. | boolean | true; <br/>false; | false | No |
@@ -185,6 +301,14 @@ If you want to deploy with a specific image you can checkout this section to get
 | internal_network1_name | 1st internal network ID in the chosen zone. The network determines what network traffic the instance can access. If you have specified a CIDR block at var.internal_network1_cidr, this network name will not be used.| string | Available network in the chosen zone | N/A | No |
 | internal_network1_subnetwork_name | 1st internal subnet ID in the chosen network. Assigns the instance an IPv4 address from the subnetwork’s range. If you have specified a CIDR block at var.internal_network1_cidr, this subnetwork will not be used. Instances in different subnetworks can communicate with each other using their internal IPs as long as they belong to the same network. | string | Available subNetwork in the chosen zone. | N/A | No |
 | internal_network1_cidr | The range of internal addresses that are owned by this subnetwork, only IPv4 is supported (e.g. "10.0.0.0/8" or "192.168.0.0/16"). | string | N/A| N/A | No |
+| internal_network1_ipv6_ula | The IPv6 ULA range for the 1st internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20 (fd20:0000:0000::/48 to fd20:0fff:ffff::/48). | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network1_project | The project ID where the 1st internal network/subnetwork reside (shared VPC host). Empty -> same as provider project. | string | N/A | "" | No |
+| internal_network2_ipv6_ula | The IPv6 ULA range for the 2nd internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network3_ipv6_ula | The IPv6 ULA range for the 3rd internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network4_ipv6_ula | The IPv6 ULA range for the 4th internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network5_ipv6_ula | The IPv6 ULA range for the 5th internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network6_ipv6_ula | The IPv6 ULA range for the 6th internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
+| internal_network7_ipv6_ula | The IPv6 ULA range for the 7th internal network. Recommended to keep empty - GCP will auto-generate when ip_stack_type is IPV4_IPV6. If specified, must be a valid /48 ULA range within fd20::/20. | string | fd20:0xxx:xxxx::/48 | "" | No |
 | management_interface | Management Interface - Security Gateways in GCP can be managed by an ephemeral public IP or using the private IP of the internal interface (eth1). | string | Ephemeral Public IP (eth0)<br/> Private IP (eth1) | Ephemeral Public IP (eth0) | No |
 
 ## Outputs

@@ -33,10 +33,13 @@ module "network_and_subnet" {
     prefix = "${local.prefix_effective}-${random_string.random_string.result}"
     type = replace(lower(local.installation_type), " ", "-")
     network_cidr = var.network_cidr
+    network_ipv6_ula = var.network_ipv6_ula
     private_ip_google_access = true
     region = local.region
     network_name = var.network_name
     subnetwork_name = var.subnetwork_name
+    ip_stack_type = var.ip_stack_type
+    ipv6_access_type = var.external_ip != "none" ? "EXTERNAL" : "INTERNAL"
     project = var.network_project
 }
 
@@ -95,6 +98,61 @@ module "network_esp_firewall_rules" {
   project = var.network_project
 }
 
+module "network_icmp_ipv6_firewall_rules" {
+  count = local.ICMP_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "58"
+  source_ranges_ipv6 = split(", ", var.network_icmp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-icmp-ipv6-${random_string.random_string.result}"
+  network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
+  target_tags = local.firewall_target_tags
+  project = var.network_project
+}
+
+module "network_tcp_ipv6_firewall_rules" {
+  count = local.TCP_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "tcp"
+  source_ranges_ipv6 = split(", ", var.network_tcp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-tcp-ipv6-${random_string.random_string.result}"
+  network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
+  target_tags = local.firewall_target_tags
+  project = var.network_project
+}
+
+module "network_udp_ipv6_firewall_rules" {
+  count = local.UDP_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "udp"
+  source_ranges_ipv6 = split(", ", var.network_udp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-udp-ipv6-${random_string.random_string.result}"
+  network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
+  target_tags = local.firewall_target_tags
+  project = var.network_project
+}
+
+module "network_sctp_ipv6_firewall_rules" {
+  count = local.SCTP_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "sctp"
+  source_ranges_ipv6 = split(", ", var.network_sctp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-sctp-ipv6-${random_string.random_string.result}"
+  network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
+  target_tags = local.firewall_target_tags
+  project = var.network_project
+}
+
+module "network_esp_ipv6_firewall_rules" {
+  count = local.ESP_ipv6_traffic_condition 
+  source = "../common/firewall-rule"
+  protocol = "esp"
+  source_ranges_ipv6 = split(", ", var.network_esp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-esp-ipv6-${random_string.random_string.result}"
+  network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
+  target_tags = local.firewall_target_tags
+  project = var.network_project
+}
+
 module "internal_network1_and_subnet" {
   count = local.create_internal_network1_condition ? 1 : 0
   source = "../common/network-and-subnet"
@@ -102,10 +160,13 @@ module "internal_network1_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network1"
   network_cidr = var.internal_network1_cidr
+  network_ipv6_ula = var.internal_network1_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network1_name
   subnetwork_name = var.internal_network1_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network1_project
 }
 
@@ -116,10 +177,13 @@ module "internal_network2_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network2"
   network_cidr = var.internal_network2_cidr
+  network_ipv6_ula = var.internal_network2_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network2_name
   subnetwork_name = var.internal_network2_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network2_project
 }
 
@@ -130,10 +194,13 @@ module "internal_network3_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network3"
   network_cidr = var.internal_network3_cidr
+  network_ipv6_ula = var.internal_network3_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network3_name
   subnetwork_name = var.internal_network3_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network3_project
 }
 
@@ -144,10 +211,13 @@ module "internal_network4_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network4"
   network_cidr = var.internal_network4_cidr
+  network_ipv6_ula = var.internal_network4_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network4_name
   subnetwork_name = var.internal_network4_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network4_project
 }
 
@@ -158,10 +228,13 @@ module "internal_network5_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network5"
   network_cidr = var.internal_network5_cidr
+  network_ipv6_ula = var.internal_network5_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network5_name
   subnetwork_name = var.internal_network5_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network5_project
 }
 
@@ -172,10 +245,13 @@ module "internal_network6_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network6"
   network_cidr = var.internal_network6_cidr
+  network_ipv6_ula = var.internal_network6_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network6_name
   subnetwork_name = var.internal_network6_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network6_project
 }
 
@@ -186,10 +262,13 @@ module "internal_network7_and_subnet" {
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   type = "internal-network7"
   network_cidr = var.internal_network7_cidr
+  network_ipv6_ula = var.internal_network7_ipv6_ula
   private_ip_google_access = false
   region = local.region
   network_name = var.internal_network7_name
   subnetwork_name = var.internal_network7_subnetwork_name
+  ip_stack_type = var.ip_stack_type
+  ipv6_access_type = "INTERNAL"
   project = var.internal_network7_project
 }
 
@@ -203,6 +282,7 @@ module "single" {
   installation_type                = local.installation_type
   prefix                           = local.prefix_effective
   management_nic                   = var.management_interface
+  ip_stack_type                    = var.ip_stack_type
   admin_shell                      = var.admin_shell
   admin_SSH_key                    = var.public_ssh_key
   maintenance_mode_password_hash   = var.maintenance_mode_password

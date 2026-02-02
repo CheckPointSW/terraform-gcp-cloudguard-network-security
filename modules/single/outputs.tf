@@ -26,8 +26,32 @@ output "network_esp_firewall_rules" {
   value = module.network_esp_firewall_rules[*].firewall_rule_name
 }
 
+output "network_icmp_ipv6_firewall_rules" {
+  value = module.network_icmp_ipv6_firewall_rules[*].firewall_rule_name
+}
+
+output "network_tcp_ipv6_firewall_rules" {
+  value = module.network_tcp_ipv6_firewall_rules[*].firewall_rule_name
+}
+
+output "network_udp_ipv6_firewall_rules" {
+  value = module.network_udp_ipv6_firewall_rules[*].firewall_rule_name
+}
+
+output "network_sctp_ipv6_firewall_rules" {
+  value = module.network_sctp_ipv6_firewall_rules[*].firewall_rule_name
+}
+
+output "network_esp_ipv6_firewall_rules" {
+  value = module.network_esp_ipv6_firewall_rules[*].firewall_rule_name
+}
+
 output "external_ip" {
   value = module.single.external_ip
+}
+
+output "external_ipv6" {
+  value = module.single.external_ipv6
 }
 
 output "int_network1_new_created_network" {
