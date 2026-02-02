@@ -5,7 +5,7 @@ resource "google_compute_firewall" "firewall_rules" {
     protocol = var.protocol
     ports = var.ports
   }
-  source_ranges = var.source_ranges
+  source_ranges = concat(var.source_ranges, var.source_ranges_ipv6)
   target_tags = var.target_tags
   project = var.project != "" ? var.project : null
 }

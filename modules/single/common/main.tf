@@ -15,6 +15,15 @@ resource "google_compute_address" "static" {
   name = "ipv4-address-${random_string.random_string.result}"
 }
 
+resource "google_compute_address" "static_ipv6" {
+  count             = (var.external_ip == "static" && var.ip_stack_type == "IPV4_IPV6") ? 1 : 0
+  name              = "ipv6-address-${random_string.random_string.result}"
+  address_type      = "EXTERNAL"
+  ip_version        = "IPV6"
+  ipv6_endpoint_type = "VM"
+  subnetwork        = var.subnetwork[0]
+}
+
 resource "google_compute_instance" "gateway" {
   name = "${var.prefix}-${random_string.random_string.result}"
   description = "Check Point Security ${replace(var.installation_type,"(Standalone)","--")==var.installation_type?split(" ",var.installation_type)[0]:" Gateway and Management"}"
@@ -41,6 +50,7 @@ resource "google_compute_instance" "gateway" {
     network = var.network[0]
     subnetwork = var.subnetwork[0]
     subnetwork_project = var.network_project == "" ? null : var.network_project
+    stack_type = var.ip_stack_type
     
     dynamic "access_config" {
       for_each = (var.external_ip == "none") ? [] : [1]
@@ -49,6 +59,13 @@ resource "google_compute_instance" "gateway" {
       }
     }
 
+    dynamic "ipv6_access_config" {
+      for_each = (var.ip_stack_type == "IPV4_IPV6" && var.external_ip != "none") ? [1] : []
+      content {
+        network_tier = "PREMIUM"
+        external_ipv6 = var.external_ip == "static" ? google_compute_address.static_ipv6[0].address : null
+      }
+    }
   }
   
   dynamic "network_interface" {
@@ -58,6 +75,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network1_network[0]
       subnetwork = var.internal_network1_subnetwork[0]
       subnetwork_project = var.internal_network1_project == "" ? null : var.internal_network1_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -68,6 +86,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network2_network[0]
       subnetwork = var.internal_network2_subnetwork[0]
       subnetwork_project = var.internal_network2_project == "" ? null : var.internal_network2_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -78,6 +97,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network3_network[0]
       subnetwork = var.internal_network3_subnetwork[0]
       subnetwork_project = var.internal_network3_project == "" ? null : var.internal_network3_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -88,6 +108,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network4_network[0]
       subnetwork = var.internal_network4_subnetwork[0]
       subnetwork_project = var.internal_network4_project == "" ? null : var.internal_network4_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -98,6 +119,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network5_network[0]
       subnetwork = var.internal_network5_subnetwork[0]
       subnetwork_project = var.internal_network5_project == "" ? null : var.internal_network5_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -108,6 +130,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network6_network[0]
       subnetwork = var.internal_network6_subnetwork[0]
       subnetwork_project = var.internal_network6_project == "" ? null : var.internal_network6_project
+      stack_type = var.ip_stack_type
     }
   }
   
@@ -118,6 +141,7 @@ resource "google_compute_instance" "gateway" {
       network = var.internal_network7_network[0]
       subnetwork = var.internal_network7_subnetwork[0]
       subnetwork_project = var.internal_network7_project == "" ? null : var.internal_network7_project
+      stack_type = var.ip_stack_type
     }
   }
 

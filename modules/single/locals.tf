@@ -44,6 +44,12 @@ locals {
   SCTP_traffic_condition = length(var.network_sctp_source_ranges) == 0 ? 0 : 1
   ESP_traffic_condition = length(var.network_esp_source_ranges) == 0 ? 0 : 1
 
+  ICMP_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && length(var.network_icmp_ipv6_source_ranges) > 0) ? 1 : 0
+  TCP_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && length(var.network_tcp_ipv6_source_ranges) > 0) ? 1 : 0
+  UDP_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && length(var.network_udp_ipv6_source_ranges) > 0) ? 1 : 0
+  SCTP_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && length(var.network_sctp_ipv6_source_ranges) > 0) ? 1 : 0
+  ESP_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && length(var.network_esp_ipv6_source_ranges) > 0) ? 1 : 0
+
   validate_num_additional_networks = var.num_additional_networks >= 0 && var.num_additional_networks <= 7 ? 0 : index("error:", "The number of internal networks must be between 0 and 7.")
 
   create_internal_network1_condition = var.internal_network1_cidr != "" && var.num_additional_networks >= 1 ? true : false
