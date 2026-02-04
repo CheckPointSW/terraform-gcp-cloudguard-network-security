@@ -219,6 +219,16 @@ After the successful Terraform deployment, you should connect to the Security Ma
 - [Installing a Check Point Security Management Server](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Content/Topics-GCP-NSI-AG/Deployment-and-Configuration.htm?tocpath=_____10)
 - [Configuring CME on Management Server](https://sc1.checkpoint.com/documents/IaaS/WebAdminGuides/EN/CP_CloudGuard_Network_for_GCP_NSI_AG/Content/Topics-GCP-NSI-AG/Configuring_CME__on_Management_Server.htm?tocpath=_____11)
 
+## IPv6 (Dual Stack) Support
+
+To enable IPv6 support for NSI, set the `ip_stack_type` variable to enable dual stack in your Terraform configuration:
+
+```hcl
+ip_stack_type = "IPV4_IPV6"
+```
+
+When deploying with dual-stack enabled, you'll also need to configure IPv6 firewall rules on the consumer side. See the Consumer Deployment section below for IPv6 configuration steps.
+
 ---
 
 ## Consumer Deployment
@@ -397,6 +407,41 @@ gcloud compute network-firewall-policies rules create 11 \
     --security-profile-group=organizations/$ORG_ID/locations/global/securityProfileGroups/consumer-security-profile-group
 ```
 
+<details>
+<summary><b>IPv6 Firewall Rules (for dual-stack deployments)</b></summary>
+
+If you enabled IPv6 support on the producer side (`ip_stack_type = "IPV4_IPV6"`), add two additional firewall rules for IPv6 traffic:
+
+**IPv6 Ingress Rule:**
+```bash
+gcloud compute network-firewall-policies rules create 12 \
+    --project=$CONSUMER_PROJECT \
+    --action=apply_security_profile_group \
+    --firewall-policy=consumer-firewall-policy \
+    --global-firewall-policy \
+    --layer4-configs=all \
+    --src-ip-ranges=::/0 \
+    --dest-ip-ranges=::/0 \
+    --direction=INGRESS \
+    --security-profile-group=organizations/$ORG_ID/locations/global/securityProfileGroups/consumer-security-profile-group
+```
+
+**IPv6 Egress Rule:**
+```bash
+gcloud compute network-firewall-policies rules create 13 \
+    --project=$CONSUMER_PROJECT \
+    --action=apply_security_profile_group \
+    --firewall-policy=consumer-firewall-policy \
+    --global-firewall-policy \
+    --layer4-configs=all \
+    --src-ip-ranges=::/0 \
+    --dest-ip-ranges=::/0 \
+    --direction=EGRESS \
+    --security-profile-group=organizations/$ORG_ID/locations/global/securityProfileGroups/consumer-security-profile-group
+```
+
+</details>
+
 ---
 
 ### Step 8: Associate Policy with VPC
@@ -546,6 +591,7 @@ gcloud compute network-firewall-policies associations create \
 | disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space.                                                                                                                                                                                                     | number | number between 100 and 4096 | 100 | no |
 | enable_monitoring | Enable Stackdriver monitoring                                                                                                                                                                                                                                                                                                                                         | bool | true <br/> false | false | no |
 | connection_draining_timeout | The time, in seconds, that the load balancer waits for active connections to complete before fully removing an instance from the backend group.                                                                                                                                                                                                                                                     | number | N/A | 300 | no |
+| ip_stack_type | The stack type for this deployment. Use IPV4_ONLY for IPv4 only, or IPV4_IPV6 for dual-stack (IPv4 + IPv6). | string | IPV4_ONLY / IPV4_IPV6 | "IPV4_ONLY" | no |
 
 ## Outputs
 

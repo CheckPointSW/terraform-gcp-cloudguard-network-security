@@ -227,3 +227,14 @@ variable "connection_draining_timeout" {
     description = "The time, in seconds, that the load balancer waits for active connections to complete before fully removing an instance from the backend group. The default value is 300 seconds."
     default = 300
 }
+
+# IPv6 Dual Stack Support
+variable "ip_stack_type" {
+  description = "The stack type for the networks (IPV4_ONLY, IPV4_IPV6)"
+  type        = string
+  default     = "IPV4_ONLY"
+  validation {
+    condition     = contains(["IPV4_ONLY", "IPV4_IPV6"], var.ip_stack_type)
+    error_message = "The ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
+  }
+}

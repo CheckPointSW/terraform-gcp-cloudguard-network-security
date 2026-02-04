@@ -117,6 +117,7 @@ resource "google_compute_instance_template" "instance_template" {
     region = ""
     os_version = var.os_version
     maintenance_mode_password_hash = var.maintenance_mode_password_hash
+    ipv6_enabled = var.ip_stack_type != "IPV4_ONLY"
   })
 }
 resource "google_compute_region_instance_group_manager" "instance_group_manager" {

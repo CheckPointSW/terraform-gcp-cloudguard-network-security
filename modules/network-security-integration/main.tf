@@ -146,6 +146,7 @@ module "network-security-integration" {
   mgmt_network_udp_traffic = var.mgmt_network_udp_traffic
   mgmt_network_sctp_traffic = var.mgmt_network_sctp_traffic
   mgmt_network_esp_traffic = var.mgmt_network_esp_traffic
+  ip_stack_type = var.ip_stack_type
 
   # --- Instance Configuration ---
   machine_type = var.machine_type
