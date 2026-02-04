@@ -26,5 +26,12 @@ bootcmd:
 %{ else ~}
   - echo "brctl hairpin br1 eth1 on" >> /etc/rc.local
 %{ endif ~}
+%{ if ipv6_enabled ~}
+  - sleep 10
+  - cp /etc/basedb /etc/basedb.bak
+  - grep -vx "ipv6 t" /etc/basedb.bak | grep -vx "ipv6 f" > /etc/basedb
+  - echo "ipv6 t" >> /etc/basedb
+  - /etc/rc3.d/S07ipv6gen
+%{ endif ~}
 runcmd:
   - 'python3 /etc/cloud_config.py generatePassword=\"${generatePassword}\" allowUploadDownload=\"${allowUploadDownload}\" templateName=\"${templateName}\" templateVersion=\"${templateVersion}\" mgmtNIC="X${mgmtNIC}X" hasInternet=\"${hasInternet}\" config_url=\"${config_url}\" config_path=\"${config_path}\" installationType="X${installation_type}X" enableMonitoring=\"${enableMonitoring}\" shell=\"${shell}\" computed_sic_key=\"${computed_sic_key}\" sicKey=\"${sicKey}\" managementGUIClientNetwork=\"${managementGUIClientNetwork}\" primary_cluster_address_name=\"${primary_cluster_address_name}\" secondary_cluster_address_name=\"${secondary_cluster_address_name}\" managementNetwork=\"${managementNetwork}\" numAdditionalNICs=\"${numAdditionalNICs}\" smart1CloudToken="X${smart_1_cloud_token}X" name=\"${name}\" zone=\"${zoneConfig}\" region=\"${region}\" osVersion=\"${os_version}\" MaintenanceModePassword=\"${maintenance_mode_password_hash}\"'
