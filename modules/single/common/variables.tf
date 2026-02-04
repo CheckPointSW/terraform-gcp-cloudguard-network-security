@@ -265,3 +265,9 @@ variable "internal_network7_subnetwork" {
   description = "7th internal subnet ID in the chosen network."
   default = []
 }
+
+variable "ip_stack_type" {
+  type        = string
+  description = "IP stack type for the network interfaces. IPV4_ONLY for IPv4 only, IPV4_IPV6 for dual-stack (IPv4 + IPv6)"
+  default     = "IPV4_ONLY"
+}

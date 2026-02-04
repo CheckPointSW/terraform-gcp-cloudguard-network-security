@@ -142,6 +142,18 @@ variable "network_project" {
   default = ""
 }
 
+variable "network_ipv6_ula" {
+  type        = string
+  description = "Gateway network IPv6 ULA CIDR range (must be within fd20::/20 with /48 prefix). Leave empty for auto-generated range (recommended). Example: fd20:1234:5678::/48"
+  default     = ""
+}
+
+variable "ip_stack_type" {
+  type        = string
+  description = "IP stack type for the networks and instance interfaces. IPV4_ONLY for IPv4 only, IPV4_IPV6 for dual-stack (IPv4 + IPv6)"
+  default     = "IPV4_ONLY"
+}
+
 variable "network_icmp_source_ranges" {
   type        = string
   description = "Source IP ranges for ICMP traffic"
@@ -169,6 +181,36 @@ variable "network_sctp_source_ranges" {
 variable "network_esp_source_ranges" {
   type        = string
   description = "Source IP ranges for ESP traffic"
+  default     = ""
+}
+
+variable "network_icmp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for ICMPv6 traffic"
+  default     = ""
+}
+
+variable "network_tcp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for TCP traffic"
+  default     = ""
+}
+
+variable "network_udp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for UDP traffic"
+  default     = ""
+}
+
+variable "network_sctp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for SCTP traffic"
+  default     = ""
+}
+
+variable "network_esp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for ESP traffic"
   default     = ""
 }
 
@@ -214,6 +256,12 @@ variable "internal_network1_project" {
   default = ""
 }
 
+variable "internal_network1_ipv6_ula" {
+  type        = string
+  description = "1st internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:1235::/48"
+  default     = ""
+}
+
 variable "internal_network2_cidr" {
   type        = string
   description = "Used only if var.num_additional_networks is 2 or and above - 2nd internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
@@ -236,6 +284,12 @@ variable "internal_network2_project" {
   type = string
   description = "The project ID where the 2nd internal network is located. For Shared VPC, this is the host project ID."
   default = ""
+}
+
+variable "internal_network2_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks is 2 or and above - 2nd internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:1236::/48"
+  default     = ""
 }
 
 variable "internal_network3_cidr" {
@@ -262,6 +316,12 @@ variable "internal_network3_project" {
   default = ""
 }
 
+variable "internal_network3_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks is 3 or and above - 3rd internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:1237::/48"
+  default     = ""
+}
+
 variable "internal_network4_cidr" {
   type        = string
   description = "Used only if var.num_additional_networks is 4 or and above - 4th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
@@ -284,6 +344,12 @@ variable "internal_network4_project" {
   type = string
   description = "The project ID where the 4th internal network is located. For Shared VPC, this is the host project ID."
   default = ""
+}
+
+variable "internal_network4_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks is 4 or and above - 4th internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:1238::/48"
+  default     = ""
 }
 
 variable "internal_network5_cidr" {
@@ -310,6 +376,12 @@ variable "internal_network5_project" {
   default = ""
 }
 
+variable "internal_network5_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks is 5 or and above - 5th internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:1239::/48"
+  default     = ""
+}
+
 variable "internal_network6_cidr" {
   type        = string
   description = "Used only if var.num_additional_networks equals 6 - 6th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
@@ -334,6 +406,12 @@ variable "internal_network6_project" {
   default = ""
 }
 
+variable "internal_network6_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks equals 6 - 6th internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:123a::/48"
+  default     = ""
+}
+
 variable "internal_network7_cidr" {
   type        = string
   description = "Used only if var.num_additional_networks equals 7 - 7th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
@@ -356,4 +434,10 @@ variable "internal_network7_project" {
   type = string
   description = "The project ID where the 7th internal network is located. For Shared VPC, this is the host project ID."
   default = ""
+}
+
+variable "internal_network7_ipv6_ula" {
+  type        = string
+  description = "Used only if var.num_additional_networks equals 7 - 7th internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:123b::/48"
+  default     = ""
 }
