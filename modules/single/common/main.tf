@@ -164,8 +164,8 @@ resource "google_compute_instance" "gateway" {
     config_path = "projects/${var.project}/configs/-config"
     sicKey = ""
     allowUploadDownload = var.allow_upload_download
-    templateName = "single_tf"
-    templateVersion = "20250306"
+    templateName = var.ip_stack_type == "IPV4_IPV6" ? "single_tf_dual_stack" : "single_tf"
+    templateVersion = "1.0.13"
     templateType = "terraform"
     hasInternet = "true"
     enableMonitoring = var.enable_monitoring
