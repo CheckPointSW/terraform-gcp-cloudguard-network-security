@@ -96,8 +96,8 @@ resource "google_compute_instance_template" "instance_template" {
     config_path = ""
     sicKey = ""
     allowUploadDownload = var.allow_upload_download
-    templateName = "network_security_integration_tf"
-    templateVersion = "20230910"
+    templateName = var.ip_stack_type == "IPV4_IPV6" ? "network_security_integration_tf_dual_stack" : "network_security_integration_tf"
+    templateVersion = "1.0.13"
     templateType = "terraform"
     mgmtNIC = var.management_nic
     hasInternet = "false"
