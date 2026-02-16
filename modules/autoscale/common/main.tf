@@ -89,7 +89,7 @@ resource "google_compute_instance_template" "instance_template" {
     config_path = ""
     sicKey = ""
     allowUploadDownload = var.allow_upload_download
-    templateName = var.ip_stack_type == "IPV4_IPV6" ? "autoscale_dual_stack" : "autoscale"
+    templateName = "autoscale"
     templateVersion = "1.0.13"
     templateType = "terraform"
     mgmtNIC = var.management_nic
