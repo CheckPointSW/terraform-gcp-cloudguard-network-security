@@ -153,6 +153,80 @@ module "example_module" {
 ```
 </details>
 
+<details>
+<summary><b>IPv6 Dual-Stack Deployment Example</b></summary>
+<br>
+
+```hcl
+provider "google" {
+    credentials = file("service-accounts/service-account-file-name.json")
+    project     = "your-gcp-project-id"
+    region      = "us-central1"
+}
+
+module "example_module" {
+    source  = "CheckPointSW/cloudguard-network-security/gcp//modules/autoscale"
+    version = "~> 1.0"
+
+    # --- Project Configuration ---
+    project_id = "your-gcp-project-id"
+    zone = "us-central1-a"
+
+    # --- Check Point Configuration ---
+    prefix = "chkp-tf-mig-ipv6"
+    source_image = ""
+    os_version = "R82"
+    license = "BYOL"
+    management_nic = "Ephemeral Public IP (eth0)"
+    management_name = "tf-checkpoint-management"
+    configuration_template_name = "tf-asg-autoprov-tmplt"
+    generate_password = true
+    admin_SSH_key = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxxxx imported-openssh-key"
+    maintenance_mode_password = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    sic_key = "xxxxxxxxx"
+    network_defined_by_routes = true
+    admin_shell = "/etc/cli.sh"
+    allow_upload_download = true
+
+    # --- Networking ---
+    external_network_name = ""
+    external_subnetwork_name = ""
+    external_network_cidr = "10.0.1.0/24"
+    internal_network_name = ""
+    internal_subnetwork_name = ""
+    internal_network_cidr = "10.0.2.0/24"
+    
+    # --- IPv6 Dual-Stack Configuration ---
+    ip_stack_type = "IPV4_IPV6"
+    external_network_ipv6_ula = ""  # Auto-generated
+    internal_network_ipv6_ula = ""  # Auto-generated
+    
+    # --- Firewall Rules - IPv4 ---
+    external_network_icmp_source_ranges = "123.123.0.0/24, 234.234.0.0/24"
+    external_network_tcp_source_ranges = "0.0.0.0/0"
+    external_network_udp_source_ranges = "0.0.0.0/0"
+    external_network_sctp_source_ranges = ""
+    external_network_esp_source_ranges = ""
+    
+    # --- Firewall Rules - IPv6 ---
+    external_network_icmp_ipv6_source_ranges = "::/0"
+    external_network_tcp_ipv6_source_ranges = "::/0"
+    external_network_udp_ipv6_source_ranges = "::/0"
+    external_network_sctp_ipv6_source_ranges = ""
+    external_network_esp_ipv6_source_ranges = ""
+
+    # --- Instance Configuration ---
+    machine_type = "n1-standard-4"
+    cpu_usage = 60
+    instances_min_group_size = 1
+    instances_max_group_size = 3
+    boot_disk_type = "SSD Persistent Disk"
+    boot_disk_size = 100
+    enable_monitoring = false
+}
+```
+</details>
+
 ## VPC
 For each network and subnet variable, you can choose whether to create a new network with a new subnet or to use an existing one.
 - If you want to create a new network and subnet, please input a subnet CIDR block for the desired new network - In this case, the network name and subnetwork name will not be used:

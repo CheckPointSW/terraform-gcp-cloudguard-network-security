@@ -25,7 +25,6 @@ output "autoscaler_name" {
 
 output "generated_admin_password" {
   value = var.generate_password ? random_string.generated_password.result : ""
-  sensitive = true
 }
 
 output "instance_group" {
