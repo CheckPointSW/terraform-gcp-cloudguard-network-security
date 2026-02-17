@@ -144,7 +144,7 @@ resource "google_compute_region_autoscaler" "autoscaler" {
   autoscaling_policy {
     max_replicas = var.instances_max_group_size
     min_replicas = var.instances_min_group_size
-    cooldown_period = 90
+    cooldown_period = 300
 
     cpu_utilization {
       target = var.cpu_usage / 100
