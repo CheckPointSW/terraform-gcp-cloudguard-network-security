@@ -147,7 +147,7 @@ module "example_module" {
     instances_min_group_size = 1
     instances_max_group_size = 3
     boot_disk_type = "SSD Persistent Disk"
-    boot_disk_size = 200
+    boot_disk_size = 100
     enable_monitoring = false
 }
 ```
