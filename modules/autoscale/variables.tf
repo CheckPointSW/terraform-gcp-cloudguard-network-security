@@ -214,3 +214,70 @@ variable "internal_network_project" {
   description = "The project in which the internal network and subnetwork belongs. If it is not provided, the provider project is used."
   default = ""
 }
+
+# IPv6 Dual Stack Support Variables
+variable "ip_stack_type" {
+  description = "The stack type for the networks (IPV4_ONLY, IPV4_IPV6)"
+  type        = string
+  default     = "IPV4_ONLY"
+  validation {
+    condition     = contains(["IPV4_ONLY", "IPV4_IPV6"], var.ip_stack_type)
+    error_message = "The ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
+  }
+}
+
+variable "external_network_ipv6_ula" {
+  description = "IPv6 ULA CIDR range for external network. If empty, Google will auto-generate one."
+  type        = string
+  default     = ""
+}
+
+variable "internal_network_ipv6_ula" {
+  description = "IPv6 ULA CIDR range for internal network. If empty, Google will auto-generate one."
+  type        = string
+  default     = ""
+}
+
+# IPv6 Firewall Rules Variables
+variable "external_network_icmp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for ICMP traffic"
+  default     = ""
+}
+
+variable "external_network_tcp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for TCP traffic"
+  default     = ""
+}
+
+variable "external_network_udp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for UDP traffic"
+  default     = ""
+}
+
+variable "external_network_sctp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for SCTP traffic"
+  default     = ""
+}
+
+variable "external_network_esp_ipv6_source_ranges" {
+  type        = string
+  description = "Source IPv6 ranges for ESP traffic"
+  default     = ""
+}
+
+# Load Balancer Configuration
+variable "deploy_external_lb" {
+  type        = bool
+  description = "Deploy external Network Load Balancer for the MIG. The external LB distributes internet traffic to the Security Gateways."
+  default     = true
+}
+
+variable "deploy_internal_lb" {
+  type        = bool
+  description = "Deploy internal Network Load Balancer for the MIG. The internal LB acts as a next hop for routing traffic through the Security Gateways."
+  default     = true
+}

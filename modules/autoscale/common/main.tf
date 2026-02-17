@@ -11,6 +11,7 @@ resource "random_string" "random_string" {
 }
 
 resource "google_compute_instance_template" "instance_template" {
+  project = var.project
   name = "${var.prefix}-tmplt-${random_string.random_string.result}"
   machine_type = var.machine_type
   can_ip_forward = true
@@ -30,11 +31,18 @@ resource "google_compute_instance_template" "instance_template" {
     network = var.external_network[0]
     subnetwork = var.external_subnetwork[0]
     subnetwork_project = var.external_network_project != "" ? var.external_network_project : null
+    stack_type = var.ip_stack_type
     dynamic "access_config" {
       for_each = local.mgmt_nic_condition ? [
         1] : []
       content {
         network_tier = local.mgmt_nic_condition ? "PREMIUM" : "STANDARD"
+      }
+    }
+    dynamic "ipv6_access_config" {
+      for_each = var.ip_stack_type == "IPV4_IPV6" && local.mgmt_nic_condition ? [1] : []
+      content {
+        network_tier = "PREMIUM"
       }
     }
   }
@@ -43,6 +51,7 @@ resource "google_compute_instance_template" "instance_template" {
     network = var.internal_network[0]
     subnetwork = var.internal_subnetwork[0]
     subnetwork_project = var.internal_network_project != "" ? var.internal_network_project : null
+    stack_type = var.ip_stack_type
   }
 
   scheduling {
@@ -63,15 +72,18 @@ resource "google_compute_instance_template" "instance_template" {
       "https://www.googleapis.com/auth/trace.append"]
   }
 
-  tags = [
-    format("x-chkp-management--%s", var.management_name),
-    format("x-chkp-template--%s", var.configuration_template_name),
-    "checkpoint-gateway",
-    local.mgmt_nic_ip_address_condition,
-    local.mgmt_nic_interface_condition,
-    local.network_defined_by_routes_condition,
-    local.network_defined_by_routes_settings_condition
-  ]
+  tags = compact([
+  format("x-chkp-management--%s", var.management_name),
+  format("x-chkp-template--%s", var.configuration_template_name),
+  "checkpoint-gateway",
+  local.mgmt_nic_ip_address_condition,
+  local.mgmt_nic_interface_condition,
+  local.network_defined_by_routes_condition,
+  local.network_defined_by_routes_settings_condition,
+  var.ip_stack_type == "IPV4_IPV6" ? "x-chkp-mig--enabled" : null,
+  var.ip_stack_type == "IPV4_IPV6" ? "x-chkp-ip-version--dual-stack" : "x-chkp-ip-version--ipv4-only",
+])
+
 
   metadata = local.admin_SSH_key_condition ? {
     serial-port-enable = "true"
@@ -89,7 +101,7 @@ resource "google_compute_instance_template" "instance_template" {
     config_path = ""
     sicKey = ""
     allowUploadDownload = var.allow_upload_download
-    templateName = "autoscale"
+    templateName = var.ip_stack_type == "IPV4_IPV6" ? "autoscale_dual_stack" : "autoscale"
     templateVersion = "1.0.13"
     templateType = "terraform"
     mgmtNIC = var.management_nic
@@ -113,6 +125,7 @@ resource "google_compute_instance_template" "instance_template" {
 }
 
 resource "google_compute_region_instance_group_manager" "instance_group_manager" {
+  project = var.project
   region = var.region
   name = "${var.prefix}-igm-${random_string.random_string.result}"
   version {
@@ -123,6 +136,7 @@ resource "google_compute_region_instance_group_manager" "instance_group_manager"
 }
 
 resource "google_compute_region_autoscaler" "autoscaler" {
+  project = var.project
   region = var.region
   name = "${var.prefix}-autoscaler-${random_string.random_string.result}"
   target = google_compute_region_instance_group_manager.instance_group_manager.id
@@ -130,7 +144,7 @@ resource "google_compute_region_autoscaler" "autoscaler" {
   autoscaling_policy {
     max_replicas = var.instances_max_group_size
     min_replicas = var.instances_min_group_size
-    cooldown_period = 90
+    cooldown_period = 300
 
     cpu_utilization {
       target = var.cpu_usage / 100

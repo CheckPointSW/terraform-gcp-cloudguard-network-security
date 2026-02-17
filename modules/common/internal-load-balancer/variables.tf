@@ -51,12 +51,18 @@ variable "instance_group" {
 
 variable "intercept_deployment_zones" {
   type = list(string)
-  description = "The list of zones for which a network security intercept deployment will be deployed. The zones must be in the same region as the deployment."
-  default = ["us-central1-a"]
+  description = "The list of zones for which forwarding rules will be created. For NSI deployments, specify multiple zones to create per-zone intercept deployments. For standard MIG deployments, leave empty to create a single regional forwarding rule."
+  default = []
 }
 
 variable "connection_draining_timeout" {
     type = number
     description = "The time, in seconds, that the load balancer waits for active connections to complete before fully removing an instance from the backend group. The default value is 300 seconds."
     default = 300
+}
+
+variable "ip_stack_type" {
+  description = "The stack type for the networks (IPV4_ONLY, IPV4_IPV6)"
+  type        = string
+  default     = "IPV4_ONLY"
 }

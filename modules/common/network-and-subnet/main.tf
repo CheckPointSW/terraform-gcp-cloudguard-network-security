@@ -7,6 +7,7 @@ resource "google_compute_network" "network" {
   name = "${replace(var.prefix, "--", "-")}-${replace(replace(var.type, "(", ""), ")", "")}"
   auto_create_subnetworks = false
   enable_ula_internal_ipv6 = var.ip_stack_type == "IPV4_IPV6" && var.ipv6_access_type == "INTERNAL" ? true : false
+  # If network_ipv6_ula is provided, use it; otherwise let GCP auto-generate
   internal_ipv6_range = var.ip_stack_type == "IPV4_IPV6" && var.ipv6_access_type == "INTERNAL" && var.network_ipv6_ula != "" ? var.network_ipv6_ula : null
   project = var.project != "" ? var.project : null
 }

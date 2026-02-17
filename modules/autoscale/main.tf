@@ -44,10 +44,13 @@ module "external_network_and_subnet" {
     prefix = "${local.prefix_effective}-ext-network-${random_string.mig_random_string.result}"
     type = "autoscale"
     network_cidr = var.external_network_cidr
+    network_ipv6_ula = var.external_network_ipv6_ula
     private_ip_google_access = true
     region = local.region
     network_name = var.external_network_name
     subnetwork_name = var.external_subnetwork_name
+    ip_stack_type = var.ip_stack_type
+    ipv6_access_type = var.management_nic == "Ephemeral Public IP (eth0)" ? "EXTERNAL" : "INTERNAL"
     project = var.external_network_project
 }
 
@@ -56,10 +59,13 @@ module "internal_network_and_subnet" {
     prefix = "${local.prefix_effective}-int-network-${random_string.mig_random_string.result}"
     type = "autoscale"
     network_cidr = var.internal_network_cidr
+    network_ipv6_ula = var.internal_network_ipv6_ula
     private_ip_google_access = true
     region = local.region
     network_name = var.internal_network_name
     subnetwork_name = var.internal_subnetwork_name
+    ip_stack_type = var.ip_stack_type
+    ipv6_access_type = "INTERNAL"
     project = var.internal_network_project
 }
 
@@ -113,6 +119,58 @@ module "esp_firewall_rules" {
   project = var.external_network_project
 }
 
+# IPv6 Firewall Rules
+module "icmp_ipv6_firewall_rules" {
+  count = local.icmp_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "58"
+  source_ranges_ipv6 = split(", ", var.external_network_icmp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-icmp-ipv6-${random_string.random_string.result}"
+  network = local.create_external_network_condition ? module.external_network_and_subnet.new_created_network_link : module.external_network_and_subnet.existing_network_link
+  project = var.external_network_project
+}
+
+module "tcp_ipv6_firewall_rules" {
+  count = local.tcp_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "tcp"
+  source_ranges_ipv6 = split(", ", var.external_network_tcp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-tcp-ipv6-${random_string.random_string.result}"
+  network = local.create_external_network_condition ? module.external_network_and_subnet.new_created_network_link : module.external_network_and_subnet.existing_network_link
+  project = var.external_network_project
+}
+
+module "udp_ipv6_firewall_rules" {
+  count = local.udp_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "udp"
+  source_ranges_ipv6 = split(", ", var.external_network_udp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-udp-ipv6-${random_string.random_string.result}"
+  network = local.create_external_network_condition ? module.external_network_and_subnet.new_created_network_link : module.external_network_and_subnet.existing_network_link
+  project = var.external_network_project
+}
+
+module "sctp_ipv6_firewall_rules" {
+  count = local.sctp_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "sctp"
+  source_ranges_ipv6 = split(", ", var.external_network_sctp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-sctp-ipv6-${random_string.random_string.result}"
+  network = local.create_external_network_condition ? module.external_network_and_subnet.new_created_network_link : module.external_network_and_subnet.existing_network_link
+  project = var.external_network_project
+}
+
+module "esp_ipv6_firewall_rules" {
+  count = local.esp_ipv6_traffic_condition
+  source = "../common/firewall-rule"
+  protocol = "esp"
+  source_ranges_ipv6 = split(", ", var.external_network_esp_ipv6_source_ranges)
+  rule_name = "${local.prefix_effective}-esp-ipv6-${random_string.random_string.result}"
+  network = local.create_external_network_condition ? module.external_network_and_subnet.new_created_network_link : module.external_network_and_subnet.existing_network_link
+  project = var.external_network_project
+}
+
+
 module "autoscale" {
   source = "./common"
 
@@ -147,6 +205,8 @@ module "autoscale" {
   SCTP_traffic = [var.external_network_sctp_source_ranges]
   ESP_traffic = [var.external_network_esp_source_ranges]
 
+  ip_stack_type = var.ip_stack_type
+
   # --- Instance Configuration ---
   machine_type = var.machine_type
   cpu_usage = var.cpu_usage
@@ -155,4 +215,44 @@ module "autoscale" {
   disk_type = var.boot_disk_type
   disk_size = var.boot_disk_size
   enable_monitoring = var.enable_monitoring
+}
+
+module "external_load_balancer" {
+  count = var.deploy_external_lb ? 1 : 0
+  source = "../common/external-load-balancer"
+  
+  project = var.project_id
+  prefix = "${local.prefix_effective}-${random_string.mig_random_string.result}"
+  region = local.region
+  
+  instance_group = module.autoscale.instance_group
+  protocol = "TCP"
+  ip_protocol = "TCP"
+  ports = []  # Empty list means all ports
+  
+  session_affinity = "CLIENT_IP_PROTO"
+  connection_draining_timeout = 300
+  ip_stack_type = var.ip_stack_type
+  subnetwork = local.create_external_network_condition ? module.external_network_and_subnet.new_created_subnet_link[0] : module.external_network_and_subnet.existing_subnet_link[0]
+}
+
+module "internal_load_balancer" {
+  count = var.deploy_internal_lb ? 1 : 0
+  source = "../common/internal-load-balancer"
+  
+  project = var.project_id
+  prefix = "${local.prefix_effective}-${random_string.mig_random_string.result}"
+  region = local.region
+  
+  network = local.create_internal_network_condition ? module.internal_network_and_subnet.new_created_network_link[0] : module.internal_network_and_subnet.existing_network_link[0]
+  subnetwork = local.create_internal_network_condition ? module.internal_network_and_subnet.new_created_subnet_link[0] : module.internal_network_and_subnet.existing_subnet_link[0]
+  instance_group = module.autoscale.instance_group
+  
+  protocol = "TCP"
+  ip_protocol = "TCP"
+  
+  # Regional forwarding rule (empty list = regional, not per-zone)
+  intercept_deployment_zones = []
+  connection_draining_timeout = 300
+  ip_stack_type = var.ip_stack_type
 }
