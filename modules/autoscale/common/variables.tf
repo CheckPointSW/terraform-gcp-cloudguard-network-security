@@ -223,3 +223,14 @@ variable "enable_monitoring" {
   description = "Enable Stackdriver monitoring"
   default = false
 }
+
+# --- IPv6 Support ---
+variable "ip_stack_type" {
+  description = "The stack type for this deployment (IPV4_ONLY, IPV4_IPV6)"
+  type        = string
+  default     = "IPV4_ONLY"
+  validation {
+    condition     = contains(["IPV4_ONLY", "IPV4_IPV6"], var.ip_stack_type)
+    error_message = "The ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
+  }
+}

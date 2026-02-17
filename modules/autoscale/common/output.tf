@@ -25,3 +25,8 @@ output "autoscaler_name" {
 output "generated_admin_password" {
   value = var.generate_password ? random_string.generated_password.result : ""
 }
+
+output "instance_group" {
+  value = google_compute_region_instance_group_manager.instance_group_manager.instance_group
+  description = "The self_link of the instance group for use with load balancers"
+}

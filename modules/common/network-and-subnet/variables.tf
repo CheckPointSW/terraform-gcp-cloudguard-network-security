@@ -35,7 +35,6 @@ variable "project" {
   description = "The project in which the resource (network/subnetwork) belongs. If empty, the provider project is used."
   default = ""
 }
-
 variable "ip_stack_type" {
   type = string
   description = "The IP stack type for this network. Possible values are IPV4_ONLY and IPV4_IPV6."
@@ -45,7 +44,6 @@ variable "ip_stack_type" {
     error_message = "ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
   }
 }
-
 variable "ipv6_access_type" {
   type = string
   description = "The IPv6 access type for this subnetwork. Possible values are EXTERNAL and INTERNAL."
@@ -55,7 +53,6 @@ variable "ipv6_access_type" {
     error_message = "ipv6_access_type must be either EXTERNAL or INTERNAL."
   }
 }
-
 variable "network_ipv6_ula" {
   type = string
   description = "The IPv6 ULA range for the internal network. Required when stack_type is IPV4_IPV6. Must be a valid ULA range (fd20::/20) with /48 prefix."

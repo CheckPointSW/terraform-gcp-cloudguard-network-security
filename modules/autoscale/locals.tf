@@ -29,4 +29,10 @@ locals {
   udp_traffic_condition = var.external_network_udp_source_ranges != "" ? 1 : 0
   sctp_traffic_condition = var.external_network_sctp_source_ranges != "" ? 1 : 0
   esp_traffic_condition = var.external_network_esp_source_ranges != "" ? 1 : 0
+
+  icmp_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && var.external_network_icmp_ipv6_source_ranges != "") ? 1 : 0
+  tcp_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && var.external_network_tcp_ipv6_source_ranges != "") ? 1 : 0
+  udp_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && var.external_network_udp_ipv6_source_ranges != "") ? 1 : 0
+  sctp_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && var.external_network_sctp_ipv6_source_ranges != "") ? 1 : 0
+  esp_ipv6_traffic_condition = (var.ip_stack_type == "IPV4_IPV6" && var.external_network_esp_ipv6_source_ranges != "") ? 1 : 0
 }
