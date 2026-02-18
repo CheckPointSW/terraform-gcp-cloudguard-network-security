@@ -178,7 +178,7 @@ Leave the network project variable(s) empty when network(s) are in the same proj
 Shared VPC is not supported across organizations. The host project and service project must be in the same organization.
 
 ## IPv6 Dual-Stack Support
-This module supports IPv6 dual-stack networking alongside IPv4. To enable IPv6:
+This module supports IPv6 dual-stack networking alongside IPv4. Additional required deployment steps are described in [sk184620 - IPv6 support for CloudGuard Network Security in GCP](https://support.checkpoint.com/results/sk/sk184620). To enable IPv6:
 
 1. Set `ip_stack_type = "IPV4_IPV6"` to enable dual-stack support
 2. Configure IPv6 ULA ranges for networks:
