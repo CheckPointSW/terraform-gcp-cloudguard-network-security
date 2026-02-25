@@ -31,7 +31,7 @@ module "common" {
 module "network_and_subnet" {
     source = "../common/network-and-subnet"
     prefix = "${local.prefix_effective}-${random_string.random_string.result}"
-    type = replace(lower(local.installation_type), " ", "-")
+    type = local.installation_type_short
     network_cidr = var.network_cidr
     network_ipv6_ula = var.network_ipv6_ula
     private_ip_google_access = true
@@ -48,7 +48,7 @@ module "network_icmp_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "icmp"
   source_ranges = split(", ", var.network_icmp_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-icmp-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-icmp-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -59,7 +59,7 @@ module "network_tcp_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "tcp"
   source_ranges = split(", ", var.network_tcp_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-tcp-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-tcp-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -70,7 +70,7 @@ module "network_udp_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "udp"
   source_ranges = split(", ", var.network_udp_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-udp-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-udp-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -81,7 +81,7 @@ module "network_sctp_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "sctp"
   source_ranges = split(", ", var.network_sctp_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-sctp-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-sctp-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -92,7 +92,7 @@ module "network_esp_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "esp"
   source_ranges = split(", ", var.network_esp_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-esp-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-esp-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -103,7 +103,7 @@ module "network_icmp_ipv6_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "58"
   source_ranges_ipv6 = split(", ", var.network_icmp_ipv6_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-icmp-ipv6-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-icmp-ipv6-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -114,7 +114,7 @@ module "network_tcp_ipv6_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "tcp"
   source_ranges_ipv6 = split(", ", var.network_tcp_ipv6_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-tcp-ipv6-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-tcp-ipv6-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -125,7 +125,7 @@ module "network_udp_ipv6_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "udp"
   source_ranges_ipv6 = split(", ", var.network_udp_ipv6_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-udp-ipv6-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-udp-ipv6-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -136,7 +136,7 @@ module "network_sctp_ipv6_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "sctp"
   source_ranges_ipv6 = split(", ", var.network_sctp_ipv6_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-sctp-ipv6-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-sctp-ipv6-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project
@@ -147,7 +147,7 @@ module "network_esp_ipv6_firewall_rules" {
   source = "../common/firewall-rule"
   protocol = "esp"
   source_ranges_ipv6 = split(", ", var.network_esp_ipv6_source_ranges)
-  rule_name = "${local.prefix_effective}-${replace(replace(replace(lower(local.installation_type), "(", ""), ")", ""), " ", "-")}-esp-ipv6-${random_string.random_string.result}"
+  rule_name = "${local.prefix_effective}-${local.installation_type_short}-esp-ipv6-${random_string.random_string.result}"
   network = local.create_network_condition ? module.network_and_subnet.new_created_network_link : module.network_and_subnet.existing_network_link
   target_tags = local.firewall_target_tags
   project = var.network_project

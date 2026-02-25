@@ -76,4 +76,12 @@ locals {
     local.installation_type == "Manual Configuration" ? ["checkpoint-manual"] :
     ["checkpoint-management"]
   )
+
+  # Shortened installation type for resource naming to avoid exceeding GCP name length limits
+  installation_type_short = (
+    local.installation_type == "Gateway only" ? "gateway" :
+    local.installation_type == "Manual Configuration" ? "manual" :
+    local.installation_type == "Gateway and Management (Standalone)" ? "standalone" :
+    local.installation_type == "Management only" ? "management" : ""
+  )
 }
