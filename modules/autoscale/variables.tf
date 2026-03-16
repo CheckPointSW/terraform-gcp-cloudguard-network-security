@@ -61,13 +61,13 @@ variable "boot_disk_size" {
 variable "external_network_cidr" {
   description = "The external network CIDR"
   type        = string
-  default = "10.0.1.0/24"
+  default = ""
 }
 
 variable "internal_network_cidr" {
   description = "The internal network CIDR"
   type        = string
-  default = "10.0.2.0/24"
+  default = ""
 }
 
 variable "external_network_name" {

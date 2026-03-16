@@ -144,7 +144,7 @@ resource "null_resource" "validate_mgmt_network_if_required" {
 variable "cluster_network_cidr" {
   type        = string
   description = "Cluster external subnet CIDR. If the variable's value is not empty double quotes, a new network will be created. The Cluster public IP will be translated to a private address assigned to the active member in this external network."
-  default     = "10.0.0.0/24"
+  default     = ""
 }
 
 variable "cluster_network_name" {
@@ -222,7 +222,7 @@ variable "cluster_network_esp_source_ranges" {
 variable "mgmt_network_cidr" {
   type        = string
   description = "Management external subnet CIDR. If the variable's value is not empty double quotes, a new network will be created. The Management public IP will be translated to a private address assigned to the active member in this external network."
-  default     = "10.0.1.0/24"
+  default     = ""
 }
 
 variable "mgmt_network_name" {
@@ -311,7 +311,7 @@ resource "null_resource" "num_internal_networks_validation" {
 variable "internal_network1_cidr" {
   type        = string
   description = "1st internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.2.0/24"
+  default     = ""
 }
 
 variable "internal_network1_name" {
@@ -329,7 +329,7 @@ variable "internal_network1_subnetwork_name" {
 variable "internal_network2_cidr" {
   type        = string
   description = "Used only if var.num_internal_networks is 2 or and above - 2nd internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.3.0/24"
+  default     = ""
 }
 
 variable "internal_network2_name" {
@@ -347,7 +347,7 @@ variable "internal_network2_subnetwork_name" {
 variable "internal_network3_cidr" {
   type        = string
   description = "Used only if var.num_internal_networks is 3 or and above - 3rd internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.4.0/24"
+  default     = ""
 }
 
 variable "internal_network3_name" {
@@ -365,7 +365,7 @@ variable "internal_network3_subnetwork_name" {
 variable "internal_network4_cidr" {
   type        = string
   description = "Used only if var.num_internal_networks is 4 or and above - 4th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.5.0/24"
+  default     = ""
 }
 
 variable "internal_network4_name" {
@@ -383,7 +383,7 @@ variable "internal_network4_subnetwork_name" {
 variable "internal_network5_cidr" {
   type        = string
   description = "Used only if var.num_internal_networks is 5 or and above - 5th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.6.0/24"
+  default     = ""
 }
 
 variable "internal_network5_name" {
@@ -401,7 +401,7 @@ variable "internal_network5_subnetwork_name" {
 variable "internal_network6_cidr" {
   type        = string
   description = "Used only if var.num_internal_networks equals 6 - 6th internal subnet CIDR. If the variable's value is not empty double quotes, a new subnet will be created. Assigns the cluster members an IPv4 address in this internal network."
-  default     = "10.0.7.0/24"
+  default     = ""
 }
 
 variable "internal_network6_name" {
