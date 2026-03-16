@@ -9,7 +9,7 @@ variable "type" {
 variable "network_cidr" {
   type = string
   description = "External subnet CIDR. If the variable's value is not empty double quotes, a new network will be created."
-  default = "10.0.0.0/24"
+  default = ""
 }
 variable "private_ip_google_access" {
   type = bool

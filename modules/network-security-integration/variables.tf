@@ -123,13 +123,13 @@ variable "intercept_deployment_zones" {
 variable "mgmt_network_cidr" {
   type = string
   description = "The range of external addresses that are owned by this network, only IPv4 is supported (e.g. \"10.0.0.0/8\" or \"192.168.0.0/16\")."
-  default = "10.0.1.0/24"
+  default = ""
 }
 
 variable "security_network_cidr" {
   type = string
   description = "The range of internal addresses that are owned by this network, only IPv4 is supported (e.g. \"10.0.0.0/8\" or \"192.168.0.0/16\")."
-  default = "10.0.2.0/24"
+  default = ""
 }
 
 variable "mgmt_network_icmp_traffic" {
