@@ -109,18 +109,21 @@ variable "sic_key" {
   type        = string
   description = "The Secure Internal Communication one time secret used to set up trust between the gateway object and the management server"
   default     = ""
+  sensitive   = true
 }
 
 variable "smart_1_cloud_token_a" {
   type        = string
   description = "(Optional) Smart-1 cloud token for member A to connect this Gateway to Check Point's Security Management as a Service"
   default     = ""
+  sensitive   = true
 }
 
 variable "smart_1_cloud_token_b" {
   type        = string
   description = "(Optional) Smart-1 cloud token for member B to connect this Gateway to Check Point's Security Management as a Service"
   default      = ""
+  sensitive   = true
 }
 
 resource "null_resource" "validate_both_tokens" {

@@ -66,6 +66,7 @@ variable "maintenance_mode_password_hash" {
   description = "Maintenance mode password hash, relevant only for R81.20 and higher versions"
   type = string
   default = ""
+  sensitive = true
 }
 variable "admin_shell" {
   type = string
@@ -86,6 +87,7 @@ variable "sic_key" {
   type = string
   description ="The Secure Internal Communication one time secret used to set up trust between the gatewayes objects and the management server"
   default = ""
+  sensitive = true
   validation {
     condition = can(regex("^[a-z0-9A-Z]{12,30}$", var.sic_key))
     error_message = "Only alphanumeric characters are allowed, and the value must be 12-30 characters long."

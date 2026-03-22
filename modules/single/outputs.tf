@@ -115,11 +115,13 @@ output "source_image" {
 }
 
 output "admin_password" {
-  value = module.single.admin_password
+  value       = module.single.admin_password
   description = "The auto-generated admin password (when generate_password = true)"
+  sensitive   = true
 }
 
 output "sic_key" {
-  value = var.sic_key
+  value       = var.sic_key
   description = "The SIC key used for gateway configuration"
+  sensitive   = true
 }
