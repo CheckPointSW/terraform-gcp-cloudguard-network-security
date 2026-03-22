@@ -607,6 +607,7 @@ Module outputs must be defined in your `main.tf` to be accessible. Add output bl
 output "nsi_outputs" {
   value       = module.nsi_producer
   description = "All outputs from the NSI module"
+  sensitive   = true
 }
 ```
 

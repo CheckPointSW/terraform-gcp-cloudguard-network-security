@@ -144,6 +144,7 @@ variable "maintenance_mode_password" {
   description = "Check Point recommends setting serial console password and maintenance-mode password for recovery purposes"
   type        = string
   default     = ""
+  sensitive   = true
 }
 
 variable "enable_monitoring" {
@@ -171,6 +172,7 @@ variable "sic_key" {
   type        = string
   description = "The Secure Internal Communication one time secret used to set up trust between the gateway object and the management server"
   default     = ""
+  sensitive   = true
 }
 
 variable "external_network_icmp_source_ranges" {

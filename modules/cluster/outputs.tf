@@ -107,11 +107,13 @@ output "cluster_ip_external_address" {
 }
 
 output "admin_password" {
-  value = var.generate_password ? [random_string.generated_password.result] : []
+  value     = var.generate_password ? [random_string.generated_password.result] : []
+  sensitive = true
 }
 
 output "sic_key" {
-  value = var.sic_key
+  value     = var.sic_key
+  sensitive = true
 }
 
 output "member_a_name" {

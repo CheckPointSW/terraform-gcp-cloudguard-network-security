@@ -408,6 +408,7 @@ Module outputs must be defined in your `main.tf` to be accessible. Add output bl
 output "autoscale_outputs" {
   value       = module.example_module
   description = "All outputs from the autoscale module"
+  sensitive   = true
 }
 ```
 
@@ -421,7 +422,7 @@ output "external_network" {
 output "admin_password" {
   value       = module.example_module.admin_password
   description = "Admin password"
-  sensitive   = true  # Hide from console output
+  sensitive   = true
 }
 ```
 
