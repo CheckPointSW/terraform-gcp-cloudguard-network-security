@@ -21,10 +21,10 @@ kernel_parameters:
     - fwtls_bridge_mode_inspection=1
     - fw_geneve_enabled=1
 bootcmd:
-%{ if os_version == "R8210" ~}
-  - $CGEDIR/scripts/hairpin_on.sh eth1 br1
-%{ else ~}
+%{ if contains(["R8120", "R82"], os_version) ~}
   - echo "brctl hairpin br1 eth1 on" >> /etc/rc.local
+%{ else ~}
+  - $CGEDIR/scripts/hairpin_on.sh eth1 br1
 %{ endif ~}
 %{ if ipv6_enabled ~}
   - sleep 10

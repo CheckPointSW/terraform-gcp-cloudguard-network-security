@@ -56,8 +56,7 @@ output "esp_ipv6_firewall_rules" {
 }
 
 output "admin_password" {
-  value     = var.generate_password ? module.autoscale.generated_admin_password : ""
-  sensitive = true
+  value = var.generate_password ? module.autoscale.generated_admin_password : ""
 }
 
 output "sic_key"{
