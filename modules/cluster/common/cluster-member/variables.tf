@@ -28,7 +28,6 @@ variable "machine_type" {
 variable "disk_size" {
   type = number
   description = "Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space."
-  default = 100
 }
 
 variable "disk_type" {

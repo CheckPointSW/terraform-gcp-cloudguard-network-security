@@ -64,7 +64,7 @@ module "example_module" {
     # --- Instance Configuration ---
     machine_type                         = "n1-standard-4"
     boot_disk_type                       = "SSD Persistent Disk"
-    boot_disk_size                       = 100
+    boot_disk_size                       = 200
     enable_monitoring                    = false
 }
 ```
@@ -138,7 +138,7 @@ module "example_ipv6_module" {
     # --- Instance Configuration ---
     machine_type                         = "n1-standard-4"
     boot_disk_type                       = "SSD Persistent Disk"
-    boot_disk_size                       = 100
+    boot_disk_size                       = 200
     enable_monitoring                    = false
 }
 ```
@@ -286,7 +286,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | network_sctp_ipv6_source_ranges | Source IPv6 ranges for SCTP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only - all ports are allowed. | "" | No |
 | network_esp_ipv6_source_ranges | Source IPv6 ranges for ESP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only. | "" | No |
 | boot_disk_type | Disk type. | string | SSD Persistent Disk;<br/>standard-Persistent Disk;<br/>Storage space is much less expensive for a standard persistent disk. An SSD persistent disk is better for random IOPS or streaming throughput with low latency. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.66020774.-962483654.1585043745#overview_of_disk_types) | SSD Persistent Disk | No |
-| boot_disk_size | Disk size in GB. | number | Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.232680471.-962483654.1585043745#pdperformance) | 100 | No |
+| boot_disk_size | Disk size in GB. | number | Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.232680471.-962483654.1585043745#pdperformance) | 200 | No |
 | generate_password | Automatically generate an administrator password. | boolean | true; <br/>false; | false | No |
 | allow_upload_download | Allow download from/upload to Check Point. | boolean | true; <br/>false; | true | No |
 | enable_monitoring | Enable Stackdriver monitoring. | boolean | true; <br/>false; | false | No |

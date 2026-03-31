@@ -52,3 +52,14 @@ variable "boot_disk_type" {
   description = "The boot disk type for the VM instance."
   default     = "SSD Persistent Disk"
 }
+
+variable "boot_disk_size" {
+  type        = number
+  description = "The boot disk size for the VM instance in GBs"
+  default     = 200
+  validation {
+    condition     = var.boot_disk_size >= 100 && var.boot_disk_size <= 4096
+    error_message = "Boot disk size must be between 100 and 4096 GB."
+  }
+}
+

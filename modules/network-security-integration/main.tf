@@ -31,6 +31,7 @@ module "common" {
   admin_shell = var.admin_shell
   license = upper(local.license)
   admin_SSH_key = var.admin_SSH_key
+  boot_disk_size = var.disk_size
 }
 
 module "mgmt_network_and_subnet" {

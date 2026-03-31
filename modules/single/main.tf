@@ -25,6 +25,7 @@ module "common" {
   license = upper(local.license)
   admin_SSH_key = var.public_ssh_key
   boot_disk_type = var.boot_disk_type
+  boot_disk_size = var.boot_disk_size
   externalIP = var.external_ip
 }
 
