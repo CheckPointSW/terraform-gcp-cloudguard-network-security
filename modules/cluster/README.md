@@ -35,7 +35,7 @@ module "example_module" {
     zone_b = "us-central1-a"
     machine_type = "n1-standard-4"
     boot_disk_type = "SSD Persistent Disk"
-    boot_disk_size = 100
+    boot_disk_size = 200
     public_ssh_key = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxxxx imported-openssh-key"
     enable_monitoring = false
 
@@ -176,7 +176,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | zone_b | Member B Zone.  | string  | N/A | "us-central1-a" | No |
 | machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n1-standard-4" | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
-| boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 100 | No |
+| boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
 | enable_monitoring | Enable Stackdriver monitoring | bool | true/false | false | No |
 | management_network  | Security Management Server address - The public address of the Security Management Server, in CIDR notation. If using Smart-1 Cloud management, insert 'S1C'. VPN peers addresses cannot be in this CIDR block, so this value cannot be the zero-address. | string | N/A | N/A | Yes |
 | sic_key  | The Secure Internal Communication one time secret used to set up trust between the cluster object and the management server. At least 8 alpha numeric characters. If SIC is not provided and needed, a key will be automatically generated | string | N/A | N/A | Yes |

@@ -65,7 +65,6 @@ variable "disk_type" {
 variable "disk_size" {
   type = number
   description ="Disk size in GB"
-  default = 100
 }
 
 variable "generate_password" {

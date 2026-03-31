@@ -67,7 +67,7 @@ variable "boot_disk_type" {
 variable "boot_disk_size" {
   description = "The boot disk size for the VM instance in GBs"
   type        = number
-  default     = 100
+  default     = 200
 }
 
 variable "public_ssh_key" {

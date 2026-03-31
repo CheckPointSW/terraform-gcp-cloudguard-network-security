@@ -37,6 +37,7 @@ module "common" {
   license = upper(local.license)
   admin_SSH_key = var.admin_SSH_key
   boot_disk_type = var.boot_disk_type
+  boot_disk_size = var.boot_disk_size
 }
 
 module "external_network_and_subnet" {

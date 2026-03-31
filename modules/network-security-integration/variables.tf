@@ -213,11 +213,7 @@ variable "disk_type" {
 variable "disk_size" {
   type = number
   description = "Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space."
-  default = 100
-}
-resource "null_resource" "disk_size_validation" {
-  // Will fail if var.disk_size is less than 100 or more than 4096
-  count = var.disk_size >= 100 && var.disk_size <= 4096 ? 0 : "variable disk_size must be a number between 100 and 4096"
+  default = 200
 }
 variable "enable_monitoring" {
   type = bool

@@ -24,6 +24,7 @@ module "common" {
   admin_shell = var.admin_shell
   license = upper(local.license)
   boot_disk_type = var.boot_disk_type
+  boot_disk_size = var.boot_disk_size
 }
 
 module "cluster_network_and_subnet" {

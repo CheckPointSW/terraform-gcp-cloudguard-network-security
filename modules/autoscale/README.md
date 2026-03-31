@@ -73,7 +73,7 @@ module "example_module" {
     instances_min_group_size = 2
     instances_max_group_size = 10
     boot_disk_type = "SSD Persistent Disk"
-    boot_disk_size = 100
+    boot_disk_size = 200
     enable_monitoring = false
 }
 ```
@@ -147,7 +147,7 @@ module "example_module" {
     instances_min_group_size = 1
     instances_max_group_size = 3
     boot_disk_type = "SSD Persistent Disk"
-    boot_disk_size = 100
+    boot_disk_size = 200
     enable_monitoring = false
 }
 ```
@@ -390,7 +390,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | instances_min_group_size | The minimal number of instances. | number | N/A | 2 | No |
 | instances_max_group_size | The maximal number of instances. | number | N/A | 10 | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk <br/> Balanced Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
-| boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 100 | No |
+| boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
 | enable_monitoring | Enable Stackdriver monitoring. | bool | true/false | false | No |
 | deploy_external_lb | Deploy external Network Load Balancer for the MIG. The external LB distributes internet traffic to the Security Gateways. | bool | true/false | true | No |
 | deploy_internal_lb | Deploy internal Network Load Balancer for the MIG. The internal LB acts as a next hop for routing traffic through the Security Gateways. | bool | true/false | true | No |
