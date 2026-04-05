@@ -56,6 +56,7 @@ variable "maintenance_mode_password_hash" {
   description = "Maintenance mode password hash, relevant only for R81.20 and higher versions"
   type = string
   default = ""
+  sensitive = true
 }
 variable "admin_shell" {
   type = string
@@ -72,6 +73,7 @@ variable "sic_key" {
   type = string
   description ="The Secure Internal Communication one time secret used to set up trust between the gatewayes objects and the management server"
   default = ""
+  sensitive = true
 }
 
 # --- Networking ---

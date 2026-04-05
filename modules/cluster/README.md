@@ -215,18 +215,12 @@ This module provides outputs for networks, firewall rules, IP addresses, and sec
 
 ### Adding Outputs to Your Configuration
 
-Module outputs must be defined in your `main.tf` to be accessible. Add output blocks **after** the module call:
+Module outputs must be defined in your `main.tf` to be accessible. Add output blocks **after** the module call.
 
-**Example 1: Get all outputs in a single block**
-```hcl
-output "cluster_outputs" {
-  value       = module.example_module
-  description = "All outputs from the cluster module"
-  sensitive   = true
-}
-```
+To see detailed output, define individual outputs for the specific values you need. Reference the [Available Outputs](#available-outputs) table below to see all available outputs.
 
-**Example 2: Get specific outputs**
+**Example:**
+
 ```hcl
 output "cluster_vip" {
   value       = module.example_module.cluster_ip_external_address
@@ -236,9 +230,10 @@ output "cluster_vip" {
 output "admin_password" {
   value       = module.example_module.admin_password
   description = "Admin password"
-  sensitive   = true
+  sensitive   = true  # Mark sensitive outputs
 }
 ```
+> **Important:** Sensitive outputs (marked with 🔒 in the table below) **require** `sensitive = true` or deployment will fail. Non-sensitive outputs display their values in full.
 
 ### Viewing Outputs
 
@@ -279,8 +274,8 @@ terraform output -json              # View in JSON format (including sensitive v
 | | `member_a_zone` | Member A zone |
 | | `member_b_name` | Member B instance name |
 | | `member_b_zone` | Member B zone |
-| **Security** | `admin_password` | Auto-generated admin password (when `generate_password = true`) |
-| | `sic_key` | SIC key used for gateway configuration |
+| **Security** | `admin_password` 🔒 | Auto-generated admin password (when `generate_password = true`) |
+| | `sic_key` 🔒 | SIC key used for gateway configuration |
 | **Configuration** | `source_image` | The image used for deployment |
 
 **Note:** Internal network outputs (int_network2 through int_network6) are available based on the `num_internal_networks` variable (0-6).

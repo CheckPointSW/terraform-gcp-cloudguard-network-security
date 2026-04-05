@@ -167,6 +167,7 @@ variable "generate_password" {
 variable "sic_key" {
   type = string
   description = "The Secure Internal Communication one time secret used to set up trust between the cluster object and the management server. At least 8 alpha numeric characters. If SIC is not provided and needed, a key will be automatically generated"
+  sensitive = true
 }
 
 variable "allow_upload_download" {
@@ -191,18 +192,21 @@ variable "maintenance_mode_password_hash" {
   description = "Maintenance mode password hash, relevant only for R81.20 and higher versions"
   type = string
   default = ""
+  sensitive = true
 }
 
 variable "smart_1_cloud_token_a" {
   type = string
   description ="(Optional) Smart-1 cloud token for member A to connect this Gateway to Check Point's Security Management as a Service"
   default = ""
+  sensitive = true
 }
 
 variable "smart_1_cloud_token_b" {
   type = string
   description ="(Optional) Smart-1 cloud token for member B to connect this Gateway to Check Point's Security Management as a Service"
   default = ""
+  sensitive = true
 }
 
 variable "management_network" {
@@ -213,6 +217,7 @@ variable "management_network" {
 variable "generated_admin_password" {
   type = string
   description = "administrator password"
+  sensitive = true
 }
 
 variable "primary_cluster_address_name" {
