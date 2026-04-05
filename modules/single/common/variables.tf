@@ -107,12 +107,14 @@ variable "maintenance_mode_password_hash" {
   description = "Maintenance mode password hash, relevant only for R81.20 and higher versions"
   type = string
   default = ""
+  sensitive = true
 }
 
 variable "sic_key" {
   type = string
   description ="The Secure Internal Communication one time secret used to set up trust between the single gateway object and the management server"
   default = ""
+  sensitive = true
 }
 
 variable "management_gui_client_network" {
@@ -125,6 +127,7 @@ variable "smart_1_cloud_token" {
   type = string
   description ="(Optional) Smart-1 cloud token to connect this Gateway to Check Point's Security Management as a Service"
   default = ""
+  sensitive = true
 }
 
 variable "num_additional_networks" {

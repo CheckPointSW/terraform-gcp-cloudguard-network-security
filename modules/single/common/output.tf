@@ -8,4 +8,5 @@ output "external_ipv6" {
 
 output "admin_password" {
   value = var.generate_password ? [random_string.generated_password.result] : []
+  sensitive = true
 }

@@ -71,6 +71,7 @@ variable "maintenance_mode_password_hash" {
   description = "Maintenance mode password hash, relevant only for R81.20 and higher versions"
   type = string
   default = ""
+  sensitive = true
 }
 
 variable "network_defined_by_routes" {
@@ -95,6 +96,7 @@ variable "sic_key" {
   type        = string
   description = "The Secure Internal Communication one time secret used to set up trust between the  gateway object and the management server"
   default     = ""
+  sensitive   = true
 }
 
 # --- Networking ---

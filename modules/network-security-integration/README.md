@@ -599,31 +599,19 @@ This module provides outputs for networks, firewall rules, autoscaling component
 
 ### Adding Outputs to Your Configuration
 
-Module outputs must be defined in your `main.tf` to be accessible. Add output blocks after the module call:
+Module outputs must be defined in your `main.tf` to be accessible. Add output blocks after the module call.
 
-**Example 1: Get all outputs in a single block**
+To see detailed output, define individual outputs for the specific values you need. Reference the [Available Outputs](#available-outputs) table below to see all available outputs.
 
-```hcl
-output "nsi_outputs" {
-  value       = module.nsi_producer
-  description = "All outputs from the NSI module"
-  sensitive   = true
-}
-```
-
-**Example 2: Get specific outputs**
+**Example:**
 
 ```hcl
 output "intercept_deployment_group_id" {
   value       = module.nsi_producer.intercept_deployment_group_id
   description = "Intercept Deployment Group ID for consumer setup"
 }
-
-output "mgmt_network_name" {
-  value       = module.nsi_producer.mgmt_network_name
-  description = "Management VPC network name"
-}
 ```
+> **Note:** This module does not have sensitive outputs. All outputs can be displayed without `sensitive = true`.
 
 ### Viewing Outputs
 

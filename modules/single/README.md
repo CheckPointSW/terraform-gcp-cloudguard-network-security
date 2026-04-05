@@ -317,30 +317,25 @@ This module provides outputs for networks, firewall rules, IP addresses, and sec
 
 ### Adding Outputs to Your Configuration
 
-Module outputs must be defined in your `main.tf` to be accessible. Add output blocks **after** the module call:
+Module outputs must be defined in your `main.tf` to be accessible. Add output blocks **after** the module call.
 
-**Example 1: Get all outputs in a single block**
-```hcl
-output "single_outputs" {
-  value       = module.example_module
-  description = "All outputs from the single module"
-  sensitive   = true
-}
-```
+To see detailed output, define individual outputs for the specific values you need. Reference the [Available Outputs](#available-outputs) table below to see all available outputs.
 
-**Example 2: Get specific outputs**
+**Example:**
+
 ```hcl
-output "external_network" {
-  value       = module.example_module.network
-  description = "External network name"
+output "external_ip" {
+  value       = module.example_module.external_ip
+  description = "External IP address"
 }
 
 output "admin_password" {
   value       = module.example_module.admin_password
   description = "Admin password"
-  sensitive   = true
+  sensitive   = true  # Mark sensitive outputs
 }
 ```
+> **Important:** Sensitive outputs (marked with 🔒 in the table below) **require** `sensitive = true` or deployment will fail. Non-sensitive outputs display their values in full.
 
 ### Viewing Outputs
 
@@ -368,8 +363,8 @@ terraform output -json              # View in JSON format (including sensitive v
 | | `network_sctp_firewall_rules` | SCTP firewall rule names |
 | | `network_esp_firewall_rules` | ESP firewall rule names |
 | **IP Addresses** | `external_ip` | External IPv4 address of the gateway |
-| **Security** | `admin_password` | Auto-generated admin password (when `generate_password = true`) |
-| | `sic_key` | SIC key used for gateway configuration |
+| **Security** | `admin_password` 🔒 | Auto-generated admin password (when `generate_password = true`) |
+| | `sic_key` 🔒 | SIC key used for gateway configuration |
 | **Configuration** | `source_image` | The image used for deployment |
 
 **Note:** Internal network outputs are available based on the `num_additional_networks` variable (0-7). For example, if `num_additional_networks = 2`, you can access `int_network1_*` and `int_network2_*` outputs.
