@@ -463,7 +463,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | cpu_usage | Target CPU usage (%) - Autoscaling adds or removes instances in the group to maintain this level of CPU usage on each instance. | number | number between 10 and 90 | 60 | No |
 | instances_min_group_size | The minimal number of instances. | number | N/A | 2 | No |
 | instances_max_group_size | The maximal number of instances. | number | N/A | 10 | No |
-| boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk <br/> Balanced Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
+| boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk <br/> Standard Persistent Disk | "SSD Persistent Disk" | No |
 | boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
 | enable_monitoring | Enable Stackdriver monitoring. | bool | true/false | false | No |
 | deploy_external_lb | Deploy external Network Load Balancer for the MIG. The external LB distributes internet traffic to the Security Gateways. | bool | true/false | true | No |
