@@ -20,7 +20,7 @@ variable "prefix" {
 variable "source_image" {
   type        = string
   description = "The image name for the disk for the VM instance."
-  default     = "projects/checkpoint-public/global/images/check-point-r82-gw-byol-single-777-991002015-v20260215"
+  default     = "projects/checkpoint-public/global/images/check-point-r82-gw-byol-single-777-991002104-v20260426"
 }
 
 variable "os_version" {
