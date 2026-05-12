@@ -98,6 +98,7 @@ variable "maintenance_mode_password" {
   description = "Check Point recommends setting serial console password and maintenance-mode password for recovery purposes"
   type        = string
   default     = ""
+  sensitive   = true
 }
 
 variable "enable_monitoring" {
