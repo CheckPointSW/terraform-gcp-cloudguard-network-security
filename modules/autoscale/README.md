@@ -415,7 +415,7 @@ If you want to deploy with a specific image you can checkout this section to get
     `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-gw-LICENSE-mig-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`
 
     Replace:
-    - `VERSION` with either `r8110`, `r8120`, `r82`.
+    - `VERSION` with either `r8110`, `r8120`, `r82`, `r8210`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you wan't. Note that the newest one are the top of the list.
 
