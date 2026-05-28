@@ -141,10 +141,6 @@ variable "management_network" {
   default = "20.20.20.20/32"
 }
 
-resource "null_resource" "validate_mgmt_network_if_required" {
-  count = var.smart_1_cloud_token_a == "" && var.management_network == "S1C" ? "Public address of the Security Management Server is required" : 0
-}
-
 variable "cluster_network_cidr" {
   type        = string
   description = "Cluster external subnet CIDR. If the variable's value is not empty double quotes, a new network will be created. The Cluster public IP will be translated to a private address assigned to the active member in this external network."
