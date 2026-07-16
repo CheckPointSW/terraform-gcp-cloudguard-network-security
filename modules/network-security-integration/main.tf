@@ -1,3 +1,10 @@
+check "intercept_zones_ignored" {
+  assert {
+    condition = !(var.intercept_all_zones && length(var.intercept_deployment_zones) > 0)
+    error_message = "intercept_deployment_zones is set but will be ignored because intercept_all_zones = true (all UP zones in the region are intercepted). If you meant to intercept only the listed zones, set intercept_all_zones = false and re-apply."
+  }
+}
+
 resource "random_string" "nsi_random_string" {
   length = 5
   special = false
@@ -137,7 +144,7 @@ module "network-security-integration" {
 
   # --- Networking ---
   region = var.region
-  intercept_deployment_zones = var.intercept_deployment_zones
+  intercept_deployment_zones = local.effective_intercept_zones
   mgmt_network = local.create_mgmt_network_condition ? module.mgmt_network_and_subnet.new_created_network_link : module.mgmt_network_and_subnet.existing_network_link
   mgmt_subnetwork  = local.create_mgmt_network_condition ? module.mgmt_network_and_subnet.new_created_subnet_link : [var.mgmt_subnetwork_name]
   security_network = local.create_security_network_condition ? module.security_network_and_subnet.new_created_network_link : module.security_network_and_subnet.existing_network_link

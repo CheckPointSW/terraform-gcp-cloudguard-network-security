@@ -106,12 +106,20 @@ data "google_compute_zones" "available_zones" {
   region = var.region
 }
 
+variable "intercept_all_zones" {
+  type = bool
+  description = "Deploy the network security intercept across all UP zones in the region. When false, scope intercept to intercept_deployment_zones. In all-zones mode the zone set is resolved at apply time; a zone added to the region after the last apply is intercepted on the next 'terraform apply'."
+  default = false
+}
+
 variable "intercept_deployment_zones" {
   type = list(string)
-  description = "The list of zones for which a network security intercept deployment will be deployed. The zones must be in the same region as the deployment."
+  description = "The list of zones for which a network security intercept deployment will be deployed. The zones must be in the same region as the deployment. Required when intercept_all_zones is false; ignored when true."
+  default = []
+  nullable = false
   validation {
-    condition = length(var.intercept_deployment_zones) > 0
-    error_message = "The intercept_deployment_zones variable must contain at least one zone."
+    condition = var.intercept_all_zones || length(var.intercept_deployment_zones) > 0
+    error_message = "When intercept_all_zones is false, intercept_deployment_zones must contain at least one zone."
   }
   validation {
     condition = length([
