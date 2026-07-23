@@ -21,4 +21,6 @@ locals{
     mgmt_udp_traffic_condition = length(var.mgmt_network_udp_traffic) == 0 ? false : true
     mgmt_sctp_traffic_condition = length(var.mgmt_network_sctp_traffic) == 0 ? false : true
     mgmt_esp_traffic_condition = length(var.mgmt_network_esp_traffic) == 0 ? false : true
+
+    effective_intercept_zones = var.intercept_all_zones ? data.google_compute_zones.available_zones.names : var.intercept_deployment_zones
 }

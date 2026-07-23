@@ -15,13 +15,24 @@ An intercept deployment and corresponding forwarding rule to the Internal Load B
 
 If an Intercept Deployment is missing in a specific zone, traffic in that zone will bypass the inspection layer entirely, creating a security gap. Therefore, it is critical to align the intercept deployment zones with the zones where your workloads are deployed.
 
-The `intercept_deployment_zones` parameter controls which zones receive intercept deployments:
+The `intercept_all_zones` flag controls how the zone set is chosen:
+
+- `intercept_all_zones = false` **(default)** - scope intercept to the zones listed in `intercept_deployment_zones` (at least one zone required):
 
 ```
+intercept_all_zones = false
 intercept_deployment_zones = ["us-central1-a", "us-central1-b"]
 ```
 
 This example deploys intercept instances in both `us-central1-a` and `us-central1-b`.
+
+- `intercept_all_zones = true` - auto-discover and intercept every UP zone in the region. `intercept_deployment_zones` is ignored (a warning is emitted if it is set):
+
+```
+intercept_all_zones = true
+```
+
+> **Note (all-zones mode).** With `intercept_all_zones = true`, the intercepted zones are resolved at `terraform apply` time. A zone added to the region after the last apply is intercepted on the next `terraform apply`, which reconciles the intercept deployments to the region's current zone set.
 
 
 ## Before you begin
@@ -117,6 +128,7 @@ module "nsi_producer" {
 
   # --- Region and Zones ---
   region                     = "us-central1"
+  intercept_all_zones        = false
   intercept_deployment_zones = ["us-central1-a"]
 
   # --- Management VPC ---
@@ -571,7 +583,8 @@ gcloud compute network-firewall-policies associations create \
 | admin_shell | Change the admin shell to enable advanced command line configuration.                                                                                                                                                                                                                                                                                                 | string | /etc/cli.sh <br/> /bin/bash <br/> /bin/csh <br/> /bin/tcsh | "/etc/cli.sh" | no |
 | allow_upload_download | Automatically download Blade Contracts and other important data. Improve product experience by sending data to Check Point.                                                                                                                                                                                                                                            | bool | true/false | true | no |
 | region  | GCP region, the gateways will be randomly deployed in zones within the provided region                                                                                                                                                                                                                                                                                   | string  | N/A | "us-central1"  | no |
-| intercept_deployment_zones | The zones where the **intercept deployment** will be deployed. Ensure the VMs in the service VPC are created in these zones.                                                                                                                                                                                                                                     | list(string)  | N/A | "us-central1-a"  | no |
+| intercept_all_zones | Deploy the **intercept deployment** across all UP zones in the region. When `false`, scope to `intercept_deployment_zones`. When `true`, `intercept_deployment_zones` is ignored (a warning is emitted if set); zones are resolved at apply time, and a newly added region zone is intercepted on the next `terraform apply`.                                                                                                                                                          | bool | true <br/> false | false | no |
+| intercept_deployment_zones | The zones where the **intercept deployment** will be deployed. Ensure the VMs in the service VPC are created in these zones. Required (at least one zone) when `intercept_all_zones` is `false`; ignored when `true`.                                                                                                                                            | list(string)  | N/A | [] | Conditional (when `intercept_all_zones = false`) |
 | mgmt_network_name | The network determines what network traffic the instance can access.                                                                                                                                                                                                                                                                                                  | string | N/A | N/A | yes |
 | mgmt_subnetwork_name | Assigns the instance an IPv4 address from the subnetworkâ€™s range. Instances in different subnetworks can communicate using their internal IP addresses as long as they belong to the same network.                                                                                                                                                             | string | N/A | N/A | yes |
 | mgmt_network_cidr | The range of internal addresses that are owned by this network, only IPv4 is supported (for example "10.0.0.0/8" or "192.168.0.0/16").                                                                                                                                                                                                                                       | string | N/A |"10.0.1.0/24" | no|
