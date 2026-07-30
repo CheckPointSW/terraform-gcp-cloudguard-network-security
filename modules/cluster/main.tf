@@ -267,7 +267,7 @@ module "members_a_b" {
   secondary_cluster_address_name = local.deploy_with_public_ips == 1 ? google_compute_address.secondary_cluster_ip_ext_address[0].name : "no-public-ip"
   smart_1_cloud_token_a = var.smart_1_cloud_token_a
   smart_1_cloud_token_b = var.smart_1_cloud_token_b
-  os_version = local.os_version
+  os_version = upper(local.os_version)
   maintenance_mode_password_hash = var.maintenance_mode_password
   deploy_with_public_ips = var.deploy_with_public_ips
 }
