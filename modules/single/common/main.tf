@@ -171,7 +171,6 @@ resource "google_compute_instance" "gateway" {
     enableMonitoring = var.enable_monitoring
     shell = var.admin_shell
     installation_type = var.installation_type
-    isBlink = local.is_blink
     computed_sic_key = var.sic_key
     managementGUIClientNetwork = var.management_gui_client_network
     installSecurityManagement = true
