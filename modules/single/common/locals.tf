@@ -5,6 +5,4 @@ locals {
     var.disk_type
   )
   admin_SSH_key_condition = var.admin_SSH_key != "" ? true : false
-
-  is_blink = contains(["Management only", "Gateway only"], var.installation_type)
 }
