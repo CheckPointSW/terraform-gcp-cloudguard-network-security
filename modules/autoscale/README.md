@@ -403,7 +403,7 @@ You can choose to either deploy with the latest image or with a custom image.
 - Otherwise specify the `source_image` with the path to the image:
 
     ```
-    source_image = "check-point-r82-gw-byol-mig-777-991001866-v20250731"
+    source_image = "check-point-r82-gw-byol-mig-779-991002216-v20260811"
     os_version = ""                            # Leave empty when using specific image
     license = ""                               # Leave empty when using specific image
     ```
