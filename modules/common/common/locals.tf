@@ -19,10 +19,12 @@ locals {
   validate_license = contains(local.license_allowed_values, var.license) ? 0 : index("error:", "Invalid License. Allowed values are: BYOL, PAYG")
 
   // Validate boot_disk_type - accepts both UI format and API format
+  // hyperdisk-balanced is required by newer gvNIC machine types (e.g. N4, C4) that do not support pd-ssd/pd-standard
   validate_boot_disk_type = contains([
     "SSD Persistent Disk", "pd-ssd",
-    "Standard Persistent Disk", "pd-standard"
-  ], var.boot_disk_type) ? 0 : index("error:", "Invalid boot disk type. Allowed values are: SSD Persistent Disk (pd-ssd), Standard Persistent Disk (pd-standard)")
+    "Standard Persistent Disk", "pd-standard",
+    "Hyperdisk Balanced", "hyperdisk-balanced"
+  ], var.boot_disk_type) ? 0 : index("error:", "Invalid boot disk type. Allowed values are: SSD Persistent Disk (pd-ssd), Standard Persistent Disk (pd-standard), Hyperdisk Balanced (hyperdisk-balanced)")
 
   regex_valid_admin_SSH_key = "^(^$|ssh-(rsa|ed25519) AAAA[0-9A-Za-z+/]+[=]{0,3})"
   

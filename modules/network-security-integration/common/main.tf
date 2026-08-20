@@ -3,7 +3,12 @@ locals{
     mgmt_nic_ip_address_condition = local.mgmt_nic_condition ? "x-chkp-ip-address--public" : "x-chkp-ip-address--private"
     mgmt_nic_interface_condition = "x-chkp-management-interface--eth0"
     admin_SSH_key_condition = var.admin_SSH_key != "" ? true : false
-    disk_type_condition = var.disk_type == "SSD Persistent Disk" ? "pd-ssd" : var.disk_type == "Standard Persistent Disk" ? "pd-standard" : ""
+    disk_type_condition = (
+      var.disk_type == "SSD Persistent Disk" || var.disk_type == "pd-ssd" ? "pd-ssd" :
+      var.disk_type == "Standard Persistent Disk" || var.disk_type == "pd-standard" ? "pd-standard" :
+      var.disk_type == "Hyperdisk Balanced" || var.disk_type == "hyperdisk-balanced" ? "hyperdisk-balanced" :
+      var.disk_type
+    )
     service_nic_interface_undefined = "x-chkp-topology-eth1--undefined"
 }
 
