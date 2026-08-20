@@ -8,6 +8,7 @@ locals{
     disk_type_condition = (
       var.disk_type == "SSD Persistent Disk" || var.disk_type == "pd-ssd" ? "pd-ssd" :
       var.disk_type == "Standard Persistent Disk" || var.disk_type == "pd-standard" ? "pd-standard" :
+      var.disk_type == "Hyperdisk Balanced" || var.disk_type == "hyperdisk-balanced" ? "hyperdisk-balanced" :
       var.disk_type
     )
 }

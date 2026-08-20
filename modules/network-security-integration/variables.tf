@@ -214,8 +214,8 @@ variable "disk_type" {
   description = "Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency."
   default = "SSD Persistent Disk"
   validation {
-    condition = contains(["SSD Persistent Disk" , "Standard Persistent Disk"] , var.disk_type)
-    error_message = "Allowed values for diskType are : 'SSD Persistent Disk' , 'Standard Persistent Disk'"
+    condition = contains(["SSD Persistent Disk", "Standard Persistent Disk", "Hyperdisk Balanced", "hyperdisk-balanced"], var.disk_type)
+    error_message = "Allowed values for diskType are : 'SSD Persistent Disk' , 'Standard Persistent Disk' , 'Hyperdisk Balanced'"
   }
 }
 variable "disk_size" {
