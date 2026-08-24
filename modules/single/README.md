@@ -30,7 +30,7 @@ module "example_module" {
     
     prefix                               = "chkp-single-tf-"
     source_image                         = ""
-    os_version                           = "R82"
+    os_version                           = "R8210"
     license                              = "BYOL"
     installation_type                    = "Gateway only"
     management_interface                 = "Ephemeral Public IP (eth0)"
@@ -88,7 +88,7 @@ module "example_ipv6_module" {
     
     prefix                               = "chkp-single-ipv6-"
     source_image                         = ""
-    os_version                           = "R82"
+    os_version                           = "R8210"
     license                              = "BYOL"
     installation_type                    = "Gateway only"
     management_interface                 = "Ephemeral Public IP (eth0)"
@@ -226,7 +226,7 @@ You can choose to either deploy with the latest image or with a custom image.
 
   ```
   source_image = ""
-  os_version = "R82"
+  os_version = "R8210"
   license = "BYOL"
   installation_type = "Gateway only"
   ```
@@ -234,7 +234,7 @@ You can choose to either deploy with the latest image or with a custom image.
 - Otherwise specify the `source_image` with the path to the image:
 
   ```
-  source_image = "check-point-r82-gw-byol-single-779-991002216-v20260811"
+  source_image = "check-point-r8210-gw-byol-single-467-991002216-v20260811"
   os_version = ""     # Leave empty when specifying an image
   license = ""        # Leave empty when specifying an image
   installation = ""   # Leave empty when specifying an image
@@ -254,7 +254,7 @@ If you want to deploy with a specific image you can checkout this section to get
      `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-LICENSE-mc-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`.<br/>
 
     Replace:
-    - `VERSION` with either `r8110`, `r8120`, `r82`, `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you want. Note that the newest one are the top of the list.
 
@@ -264,7 +264,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | project_id | Personal project ID. The project indicates the default GCP project all of your resources will be created in. The project ID must be 6-30 characters long, start with a letter, and can only include lowercase letters, numbers, hyphenst and cannot end with a hyphen. | string | N/A | "" | Yes |
 | zone | The zone determines what computing resources are available and where your data is stored and used. | string | List of allowed [Regions and Zones](https://cloud.google.com/compute/docs/regions-zones?_ga=2.31926582.-962483654.1585043745) | us-central1-a | Yes |
 | source_image | The single gateway or management image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | "" | N/A | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210; | "R8210" | No |
 | installation_type | Installation type. Required only if you choose to get the latest image. | string | Gateway only;<br/> Management only;<br/> Manual Configuration;<br/>Gateway and Management (Standalone); | Gateway only | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/>PAYG; | BYOL | No |
 | prefix | The prefix to use for resource naming | string | N/A | chkp-single-tf | No |
