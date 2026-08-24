@@ -123,7 +123,7 @@ module "nsi_producer" {
 
   # --- Check Point Image ---
   source_image = ""
-  os_version   = "R82"
+  os_version   = "R8210"
   license      = "BYOL"
 
   # --- Region and Zones ---
@@ -200,7 +200,7 @@ You can choose to either deploy with the latest image or with a custom image.
 
 ```
 source_image = ""       # Leave empty for latest image
-os_version   = "R82"
+os_version   = "R8210"
 license      = "BYOL"
 ```
 
@@ -573,7 +573,7 @@ gcloud compute network-firewall-policies associations create \
 | prefix | (Optional) Resources name prefix. <br/> Note: resource name must not contain reserved words based on [sk40179](https://support.checkpoint.com/results/sk/sk40179).                                                                                                                                                                                                   | string | N/A | "chkp-tf-nsi" | no |
 | license | Check Point license (BYOL or PAYG). Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                   | string | BYOL<br/>PAYG | "BYOL" | no |
 | source_image | The NSI image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image.                                                                                                | string | N/A | "" | no |
-| os_version | Gaia OS Version. Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                                       | string | R8120;<br/> R82; | "R82" | yes |
+| os_version | Gaia OS Version. Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                                       | string | R8120;<br/> R82;<br/> R8210; | "R8210" | yes |
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by the ephemeral public IP or by the private IP of the Management interface (eth0).                                                                                                                                                                                                        | string | Ephemeral Public IP (eth0) <br/> Private IP (eth0) | "Ephemeral Public IP (eth0)" | no |
 | management_name | The name of the Security Management Server as it appears in the autoprovisioning configuration. (Enter a valid Security Management name including lowercase letters, digits and hyphens only).                                                                                                                                                                        | string | N/A | "checkpoint-management" | no |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Enter a valid autoprovisioning configuration template name including lowercase letters, digits, and hyphens only).                                                                                                                                                                 | string | N/A | "gcp-asg-autoprov-tmplt" | no |

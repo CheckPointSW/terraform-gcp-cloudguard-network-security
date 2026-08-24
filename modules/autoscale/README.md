@@ -39,7 +39,7 @@ module "example_module" {
     # --- Check Point Configuration ---
     prefix = "chkp-tf-mig"
     source_image = ""
-    os_version = "R82"
+    os_version = "R8210"
     license = "BYOL"
     management_nic = "Ephemeral Public IP (eth0)"
     management_name = "tf-checkpoint-management"
@@ -101,7 +101,7 @@ module "example_module" {
     # --- Check Point Configuration ---
     prefix = "chkp-tf-mig-ipv6"
     source_image = ""
-    os_version = "R82"
+    os_version = "R8210"
     license = "BYOL"
     management_nic = "Ephemeral Public IP (eth0)"
     management_name = "tf-checkpoint-management"
@@ -396,14 +396,14 @@ You can choose to either deploy with the latest image or with a custom image.
 
     ```
     source_image = ""
-    os_version = "R82"
+    os_version = "R8210"
     license = "BYOL"
     ```
 
 - Otherwise specify the `source_image` with the path to the image:
 
     ```
-    source_image = "check-point-r82-gw-byol-mig-779-991002216-v20260811"
+    source_image = "check-point-r8210-gw-byol-mig-467-991002216-v20260811"
     os_version = ""                            # Leave empty when using specific image
     license = ""                               # Leave empty when using specific image
     ```
@@ -415,7 +415,7 @@ If you want to deploy with a specific image you can checkout this section to get
     `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-gw-LICENSE-mig-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`
 
     Replace:
-    - `VERSION` with either `r8110`, `r8120`, `r82`, `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you wan't. Note that the newest one are the top of the list.
 
@@ -427,7 +427,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | prefix | The prefix to use for resource naming <br/> Note: resource name must not contain reserved words based on: sk40179.  | string | N/A | "chkp-tf-mig" | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/> PAYG;<br/> | "BYOL" | No |
 | source_image | The autoscaling (MIG) image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | N/A | "" | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8110;<br/> R8120;<br/> R82;<br/> R8210; | "R82" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210; | "R8210" | No |
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by an ephemeral public IP or using the private IP of the internal interface (eth1). | string | Ephemeral Public IP (eth0);<br/> Private IP (eth1); | "Ephemeral Public IP (eth0)" | No |
 | management_name | The name of the Security Management Server as appears in autoprovisioning configuration. (Please enter a valid Security Management name including lowercase letters, digits and hyphens only). | string | N/A | "checkpoint-management" | No |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Please enter a valid autoprovisioing configuration template name including lowercase letters, digits and hyphens only). | string | N/A | "gcp-asg-autoprov-tmplt" | No |

@@ -31,7 +31,7 @@ variable "source_image" {
 variable "os_version" {
   type = string
   description = "GAIA OS version"
-  default = "R82"
+  default = "R8210"
 }
 variable "management_nic" {
   type = string
