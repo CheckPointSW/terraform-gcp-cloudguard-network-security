@@ -39,13 +39,13 @@ variable "disk_type" {
 
 variable "image_name" {
   type = string
-  description = "The High Availability (cluster) image name (e.g. check-point-r8110-gw-byol-cluster-335-985-v20220126). You can choose the desired cluster image value from: https://github.com/CheckPointSW/CloudGuardIaaS/blob/master/gcp/deployment-packages/ha-byol/images.py"
+  description = "The High Availability (cluster) image name (e.g. check-point-r8210-gw-byol-cluster-467-991002216-v20260811). You can choose the desired cluster image value from: https://github.com/CheckPointSW/CloudGuardIaaS/blob/master/gcp/deployment-packages/ha-byol/images.py"
 }
 
 variable "os_version" {
   type = string
   description = "GAIA OS version"
-  default = "R8120"
+  default = "R8210"
 }
 
 variable "cluster_network" {

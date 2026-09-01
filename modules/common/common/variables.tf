@@ -7,10 +7,10 @@ variable "installation_type" {
 variable "os_version" {
   type = string
   description = "GAIA OS version"
-  default = "R8120"
+  default = "R8210"
   validation {
-    condition = contains(["R8110", "R8120" , "R82", "R8210"], var.os_version)
-    error_message = "Allowed values for os_version are 'R8110' , 'R8120', 'R82', 'R8210'"
+    condition = contains(["R8120" , "R82", "R8210"], var.os_version)
+    error_message = "Allowed values for os_version are 'R8120', 'R82', 'R8210'"
   }
 }
 
