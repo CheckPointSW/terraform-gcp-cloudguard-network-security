@@ -35,7 +35,7 @@ variable "prefix" {
 
 variable "machine_type" {
   type = string
-  default = "n1-standard-4"
+  default = "n2-standard-4"
 }
 
 variable "network" {
@@ -272,4 +272,10 @@ variable "ip_stack_type" {
   type        = string
   description = "IP stack type for the network interfaces. IPV4_ONLY for IPv4 only, IPV4_IPV6 for dual-stack (IPv4 + IPv6)"
   default     = "IPV4_ONLY"
+}
+
+variable "nic_type" {
+  type        = string
+  description = "The NIC type for network interfaces. Computed by the common module based on OS version and nic_type setting."
+  default     = null
 }

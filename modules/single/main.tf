@@ -27,6 +27,7 @@ module "common" {
   boot_disk_type = var.boot_disk_type
   boot_disk_size = var.boot_disk_size
   externalIP = var.external_ip
+  nic_type = var.nic_type
 }
 
 module "network_and_subnet" {
@@ -331,4 +332,5 @@ module "single" {
   disk_type         = var.boot_disk_type
   disk_size         = var.boot_disk_size
   enable_monitoring = var.enable_monitoring
+  nic_type          = module.common.nic_type
 }

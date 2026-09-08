@@ -68,7 +68,7 @@ module "example_module" {
     external_network_esp_source_ranges = ""
 
     # --- Instance Configuration ---
-    machine_type = "n1-standard-4"
+    machine_type = "n2-standard-4"
     cpu_usage = 60
     instances_min_group_size = 2
     instances_max_group_size = 10
@@ -142,7 +142,7 @@ module "example_module" {
     external_network_esp_ipv6_source_ranges = ""
 
     # --- Instance Configuration ---
-    machine_type = "n1-standard-4"
+    machine_type = "n2-standard-4"
     cpu_usage = 60
     instances_min_group_size = 1
     instances_max_group_size = 3
@@ -484,9 +484,17 @@ If you want to deploy with a specific image you can checkout this section to get
     `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-gw-LICENSE-mig-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`
 
     Replace:
-    - `VERSION` with either `r8120`, `r82`, `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210`, `r8220`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you wan't. Note that the newest one are the top of the list.
+
+## NIC Type Configuration
+For R82.20 and above, Google Virtual NIC (gVNIC) is the default network interface for improved network performance. For older versions, VirtIO (VIRTIO_NET) is used.
+
+To override the auto-detected NIC type, set the `nic_type` variable:
+```hcl
+nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
+```
 
 ## Inputs
 | Name | Description | Type | Allowed values | Default | Required |
@@ -496,7 +504,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | prefix | The prefix to use for resource naming <br/> Note: resource name must not contain reserved words based on: sk40179.  | string | N/A | "chkp-tf-mig" | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/> PAYG;<br/> | "BYOL" | No |
 | source_image | The autoscaling (MIG) image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | N/A | "" | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210; | "R8210" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210;<br/> R8220; | "R8210" | No |
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by an ephemeral public IP or using the private IP of the internal interface (eth1). | string | Ephemeral Public IP (eth0);<br/> Private IP (eth1); | "Ephemeral Public IP (eth0)" | No |
 | management_name | The name of the Security Management Server as appears in autoprovisioning configuration. (Please enter a valid Security Management name including lowercase letters, digits and hyphens only). | string | N/A | "checkpoint-management" | No |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Please enter a valid autoprovisioing configuration template name including lowercase letters, digits and hyphens only). | string | N/A | "gcp-asg-autoprov-tmplt" | No |
@@ -528,13 +536,14 @@ If you want to deploy with a specific image you can checkout this section to get
 | external_network_udp_ipv6_source_ranges | (Optional) Source IPv6 ranges for UDP traffic - IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation when entering ranges. Please leave empty string to disable IPv6 UDP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | N/A | "" | No |
 | external_network_sctp_ipv6_source_ranges | (Optional) Source IPv6 ranges for SCTP traffic - IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation when entering ranges. Please leave empty string to disable IPv6 SCTP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | N/A | "" | No |
 | external_network_esp_ipv6_source_ranges | (Optional) Source IPv6 ranges for ESP traffic - IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation when entering ranges. Please leave empty string to disable IPv6 ESP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | N/A | "" | No |
-| machine_type | Machine Type. | string. | N/A | "n1-standard-4" | No |
+| machine_type | Machine Type. | string. | N/A | "n2-standard-4" | No |
 | cpu_usage | Target CPU usage (%) - Autoscaling adds or removes instances in the group to maintain this level of CPU usage on each instance. | number | number between 10 and 90 | 60 | No |
 | instances_min_group_size | The minimal number of instances. | number | N/A | 2 | No |
 | instances_max_group_size | The maximal number of instances. | number | N/A | 10 | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk <br/> Standard Persistent Disk | "SSD Persistent Disk" | No |
 | boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
 | enable_monitoring | Enable Stackdriver monitoring. | bool | true/false | false | No |
+| nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
 | deploy_external_lb | Deploy external Network Load Balancer for the MIG. The external LB distributes internet traffic to the Security Gateways. | bool | true/false | true | No |
 | deploy_internal_lb | Deploy internal Network Load Balancer for the MIG. The internal LB acts as a next hop for routing traffic through the Security Gateways. | bool | true/false | true | No |
 
@@ -598,6 +607,7 @@ terraform output -json              # View in JSON format (including sensitive v
 | **Security** | `admin_password` 🔒 | Auto-generated admin password (when `generate_password = true`) |
 | | `sic_key` 🔒 | SIC key used for gateway configuration |
 | **Configuration** | `source_image` | The image used for deployment |
+| | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 | | `management_name` | Configuration template name |
 | | `ip_stack_type` | The IP stack type used (IPV4_ONLY or IPV4_IPV6) |
 | **IPv6 Networks** | `external_network_ipv6_ula` | IPv6 ULA CIDR range for external network if explicitly specified (returns empty if auto-generated by GCP) |

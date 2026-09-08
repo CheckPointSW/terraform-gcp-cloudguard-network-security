@@ -25,6 +25,7 @@ module "common" {
   license = upper(local.license)
   boot_disk_type = var.boot_disk_type
   boot_disk_size = var.boot_disk_size
+  nic_type = var.nic_type
 }
 
 module "cluster_network_and_subnet" {
@@ -270,4 +271,5 @@ module "members_a_b" {
   os_version = upper(local.os_version)
   maintenance_mode_password_hash = var.maintenance_mode_password
   deploy_with_public_ips = var.deploy_with_public_ips
+  nic_type = module.common.nic_type
 }

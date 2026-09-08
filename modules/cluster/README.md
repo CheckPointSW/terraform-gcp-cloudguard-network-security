@@ -33,7 +33,7 @@ module "example_module" {
     # --- Instances Configuration ---
     zone_a = "us-central1-a"
     zone_b = "us-central1-a"
-    machine_type = "n1-standard-4"
+    machine_type = "n2-standard-4"
     boot_disk_type = "SSD Persistent Disk"
     boot_disk_size = 200
     public_ssh_key = "ssh-rsa xxxxxxxxxxxxxxxxxxxxxxxx imported-openssh-key"
@@ -160,9 +160,17 @@ If you want to deploy with a specific image you can checkout this section to get
     `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-gw-LICENSE-cluster-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`
 
     Replace:
-    - `VERSION` with either `r8120`, `r82`, `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210`, `r8220`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you wan't. Note that the newest one are the top of the list.
+
+## NIC Type Configuration
+For R82.20 and above, Google Virtual NIC (gVNIC) is the default network interface for improved network performance. For older versions, VirtIO (VIRTIO_NET) is used.
+
+To override the auto-detected NIC type, set the `nic_type` variable:
+```hcl
+nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
+```
 
 ## Inputs
 | Name | Description | Type | Allowed values | Default | Required |
@@ -171,13 +179,14 @@ If you want to deploy with a specific image you can checkout this section to get
 | prefix | The prefix to use for resource naming | string | N/A | "chkp-tf-ha" | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/> PAYG;<br/> | "BYOL" | No |
 | source_image | The High Availability (cluster) image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | N/A | "" | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210; | "R8210" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210;<br/> R8220; | "R8210" | No |
 | zone_a | Member A Zone. The zone determines what computing resources are available and where your data is stored and used.  | string  | N/A | "us-central1-a" | No |
 | zone_b | Member B Zone.  | string  | N/A | "us-central1-a" | No |
-| machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n1-standard-4" | No |
+| machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n2-standard-4" | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
 | boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
 | enable_monitoring | Enable Stackdriver monitoring | bool | true/false | false | No |
+| nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
 | management_network  | Security Management Server address - The public address of the Security Management Server, in CIDR notation. If using Smart-1 Cloud management, insert 'S1C'. VPN peers addresses cannot be in this CIDR block, so this value cannot be the zero-address. | string | N/A | N/A | Yes |
 | sic_key  | The Secure Internal Communication one time secret used to set up trust between the cluster object and the management server. At least 8 alpha numeric characters. If SIC is not provided and needed, a key will be automatically generated | string | N/A | N/A | Yes |
 | generate_password  | Automatically generate an administrator password. | bool | true/false | false | No |
@@ -277,5 +286,6 @@ terraform output -json              # View in JSON format (including sensitive v
 | **Security** | `admin_password` 🔒 | Auto-generated admin password (when `generate_password = true`) |
 | | `sic_key` 🔒 | SIC key used for gateway configuration |
 | **Configuration** | `source_image` | The image used for deployment |
+| | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 
 **Note:** Internal network outputs (int_network2 through int_network6) are available based on the `num_internal_networks` variable (0-6).

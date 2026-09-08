@@ -43,6 +43,7 @@ resource "google_compute_instance_template" "instance_template" {
     network = var.mgmt_network[0]
     subnetwork = var.mgmt_subnetwork[0]
     stack_type = "IPV4_ONLY"
+    nic_type = var.nic_type
     dynamic "access_config" {
       for_each = local.mgmt_nic_condition ? [
         1] : []
@@ -56,6 +57,7 @@ resource "google_compute_instance_template" "instance_template" {
     network = var.security_network[0]
     subnetwork = var.security_subnetwork[0]
     stack_type = "IPV4_ONLY"
+    nic_type = var.nic_type
   }
 
   scheduling {

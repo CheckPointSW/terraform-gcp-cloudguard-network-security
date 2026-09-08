@@ -50,7 +50,7 @@ variable "zone" {
 variable "machine_type" {
   type        = string
   description = "The machine type to create, e.g. e2-small"
-  default     = "n1-standard-4"
+  default     = "n2-standard-4"
 }
 
 variable "boot_disk_type" {
@@ -442,5 +442,11 @@ variable "internal_network7_project" {
 variable "internal_network7_ipv6_ula" {
   type        = string
   description = "Used only if var.num_additional_networks equals 7 - 7th internal subnet IPv6 CIDR range for ULA (Unique Local Address). Must be within fd20::/20 (valid range: fd20:0000:0000::/48 to fd20:0fff:ffff::/48) and have /48 prefix. Example: fd20:0abc:123b::/48"
+  default     = ""
+}
+
+variable "nic_type" {
+  type        = string
+  description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
   default     = ""
 }
