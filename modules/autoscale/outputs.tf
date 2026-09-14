@@ -119,3 +119,8 @@ output "internal_lb_ipv6" {
   description = "The internal IPv6 address of the internal load balancer (if deployed with dual stack)"
   value = var.deploy_internal_lb && var.ip_stack_type == "IPV4_IPV6" ? module.internal_load_balancer[0].forwarding_rule_ipv6 : null
 }
+
+output "nic_type" {
+  value       = module.common.nic_type
+  description = "The NIC type used for network interfaces (GVNIC or VIRTIO_NET)"
+}

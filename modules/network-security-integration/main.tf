@@ -39,6 +39,7 @@ module "common" {
   license = upper(local.license)
   admin_SSH_key = var.admin_SSH_key
   boot_disk_size = var.disk_size
+  nic_type = var.nic_type
 }
 
 module "mgmt_network_and_subnet" {
@@ -165,4 +166,5 @@ module "network-security-integration" {
   disk_size = var.disk_size
   enable_monitoring = var.enable_monitoring
   connection_draining_timeout = var.connection_draining_timeout
+  nic_type = module.common.nic_type
 }

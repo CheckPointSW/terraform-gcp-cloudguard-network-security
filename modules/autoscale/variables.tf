@@ -43,7 +43,7 @@ variable "zone" {
 variable "machine_type" {
   description = "The machine type to create, e.g. e2-small"
   type        = string
-  default     = "n1-standard-4"
+  default     = "n2-standard-4"
 }
 
 variable "boot_disk_type" {
@@ -282,4 +282,10 @@ variable "deploy_internal_lb" {
   type        = bool
   description = "Deploy internal Network Load Balancer for the MIG. The internal LB acts as a next hop for routing traffic through the Security Gateways."
   default     = true
+}
+
+variable "nic_type" {
+  type        = string
+  description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
+  default     = ""
 }

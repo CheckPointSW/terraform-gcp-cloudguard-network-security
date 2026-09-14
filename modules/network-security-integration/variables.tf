@@ -244,3 +244,9 @@ variable "ip_stack_type" {
     error_message = "The ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
   }
 }
+
+variable "nic_type" {
+  type        = string
+  description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
+  default     = ""
+}

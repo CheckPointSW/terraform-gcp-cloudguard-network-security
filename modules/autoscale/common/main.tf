@@ -32,6 +32,7 @@ resource "google_compute_instance_template" "instance_template" {
     subnetwork = var.external_subnetwork[0]
     subnetwork_project = var.external_network_project != "" ? var.external_network_project : null
     stack_type = var.ip_stack_type
+    nic_type = var.nic_type
     dynamic "access_config" {
       for_each = local.mgmt_nic_condition ? [
         1] : []
@@ -52,6 +53,7 @@ resource "google_compute_instance_template" "instance_template" {
     subnetwork = var.internal_subnetwork[0]
     subnetwork_project = var.internal_network_project != "" ? var.internal_network_project : null
     stack_type = var.ip_stack_type
+    nic_type = var.nic_type
   }
 
   scheduling {

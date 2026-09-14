@@ -125,3 +125,8 @@ output "sic_key" {
   description = "The SIC key used for gateway configuration"
   sensitive   = true
 }
+
+output "nic_type" {
+  value       = module.common.nic_type
+  description = "The NIC type used for network interfaces (GVNIC or VIRTIO_NET)"
+}

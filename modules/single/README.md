@@ -62,7 +62,7 @@ module "example_module" {
     internal_network1_cidr               = "10.0.1.0/24"
 
     # --- Instance Configuration ---
-    machine_type                         = "n1-standard-4"
+    machine_type                         = "n2-standard-4"
     boot_disk_type                       = "SSD Persistent Disk"
     boot_disk_size                       = 200
     enable_monitoring                    = false
@@ -136,7 +136,7 @@ module "example_ipv6_module" {
     internal_network1_ipv6_ula           = ""  # Leave empty for auto-generation
 
     # --- Instance Configuration ---
-    machine_type                         = "n1-standard-4"
+    machine_type                         = "n2-standard-4"
     boot_disk_type                       = "SSD Persistent Disk"
     boot_disk_size                       = 200
     enable_monitoring                    = false
@@ -254,9 +254,17 @@ If you want to deploy with a specific image you can checkout this section to get
      `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-LICENSE-mc-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`.<br/>
 
     Replace:
-    - `VERSION` with either `r8120`, `r82`, `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210`, `r8220`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you want. Note that the newest one are the top of the list.
+
+## NIC Type Configuration
+For R82.20 and above, Google Virtual NIC (gVNIC) is the default network interface for improved network performance. For older versions, VirtIO (VIRTIO_NET) is used.
+
+To override the auto-detected NIC type, set the `nic_type` variable:
+```hcl
+nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
+```
 
 ## Inputs
 | Name | Description | Type | Allowed values | Default | Required |
@@ -264,11 +272,11 @@ If you want to deploy with a specific image you can checkout this section to get
 | project_id | Personal project ID. The project indicates the default GCP project all of your resources will be created in. The project ID must be 6-30 characters long, start with a letter, and can only include lowercase letters, numbers, hyphenst and cannot end with a hyphen. | string | N/A | "" | Yes |
 | zone | The zone determines what computing resources are available and where your data is stored and used. | string | List of allowed [Regions and Zones](https://cloud.google.com/compute/docs/regions-zones?_ga=2.31926582.-962483654.1585043745) | us-central1-a | Yes |
 | source_image | The single gateway or management image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image. | string | "" | N/A | No |
-| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210; | "R8210" | No |
+| os_version | GAIA OS Version. Required only if you choose to get the latest image. | string | R8120;<br/> R82;<br/> R8210;<br/> R8220; | "R8210" | No |
 | installation_type | Installation type. Required only if you choose to get the latest image. | string | Gateway only;<br/> Management only;<br/> Manual Configuration;<br/>Gateway and Management (Standalone); | Gateway only | No |
 | license | Checkpoint license (BYOL or PAYG). Required only if you choose to get the latest image. | string | BYOL;<br/>PAYG; | BYOL | No |
 | prefix | The prefix to use for resource naming | string | N/A | chkp-single-tf | No |
-| machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | [Learn more about Machine Types](https://cloud.google.com/compute/docs/machine-types?hl=en_US&_ga=2.267871494.-962483654.1585043745) | n1-standard-4 | No |
+| machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | [Learn more about Machine Types](https://cloud.google.com/compute/docs/machine-types?hl=en_US&_ga=2.267871494.-962483654.1585043745) | n2-standard-4 | No |
 | network_name | network ID in the chosen zone. The network determines what network traffic the instance can. | string | N/A | N/A | No |
 | subnetwork_name | subNetwork ID in the chosen zone. The subNetwork determines what network traffic the instance can access. | string | N/A| N/A | No |
 | network_cidr | The range of internal addresses that are owned by this network, only IPv4 is supported (e.g. "10.0.0.0/8" or "192.168.0.0/16"). | string | N/A | "" | No |
@@ -290,6 +298,7 @@ If you want to deploy with a specific image you can checkout this section to get
 | generate_password | Automatically generate an administrator password. | boolean | true; <br/>false; | false | No |
 | allow_upload_download | Allow download from/upload to Check Point. | boolean | true; <br/>false; | true | No |
 | enable_monitoring | Enable Stackdriver monitoring. | boolean | true; <br/>false; | false | No |
+| nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
 | admin_shell | Change the admin shell to enable advanced command line configuration. | string | /etc/cli.sh;<br/>/bin/bash;<br/>/bin/csh;<br/>/bin/tcsh; | /etc/cli.sh | No |
 | public_ssh_key | Public SSH key for the user 'admin' - The SSH public key for SSH authentication to the instances. Leave this field blank to use all project-wide pre-configured SSH keys. | string | A valid public ssh key. | "" | No |
 | maintenance_mode_password | Maintenance mode password hash, relevant only for R81.20 and higher versions, to generate a password hash use the command 'grub2-mkpasswd-pbkdf2' on Linux and paste it here. | string | N/A | "" | No |
@@ -366,5 +375,6 @@ terraform output -json              # View in JSON format (including sensitive v
 | **Security** | `admin_password` 🔒 | Auto-generated admin password (when `generate_password = true`) |
 | | `sic_key` 🔒 | SIC key used for gateway configuration |
 | **Configuration** | `source_image` | The image used for deployment |
+| | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 
 **Note:** Internal network outputs are available based on the `num_additional_networks` variable (0-7). For example, if `num_additional_networks = 2`, you can access `int_network1_*` and `int_network2_*` outputs.

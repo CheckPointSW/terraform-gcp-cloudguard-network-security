@@ -136,7 +136,7 @@ variable "mgmt_network_esp_traffic" {
 # --- Instance Configuration ---
 variable "machine_type" {
   type = string
-  default = "n1-standard-4"
+  default = "n2-standard-4"
 }
 variable "cpu_usage" {
   type = number
@@ -187,4 +187,10 @@ variable "ip_stack_type" {
     condition     = contains(["IPV4_ONLY", "IPV4_IPV6"], var.ip_stack_type)
     error_message = "The ip_stack_type must be either IPV4_ONLY or IPV4_IPV6."
   }
+}
+
+variable "nic_type" {
+  type        = string
+  description = "The NIC type for network interfaces. Computed by the common module based on OS version and nic_type setting."
+  default     = null
 }

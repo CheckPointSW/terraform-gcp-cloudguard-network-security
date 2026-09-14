@@ -38,6 +38,7 @@ module "common" {
   admin_SSH_key = var.admin_SSH_key
   boot_disk_type = var.boot_disk_type
   boot_disk_size = var.boot_disk_size
+  nic_type = var.nic_type
 }
 
 module "external_network_and_subnet" {
@@ -216,6 +217,7 @@ module "autoscale" {
   disk_type = var.boot_disk_type
   disk_size = var.boot_disk_size
   enable_monitoring = var.enable_monitoring
+  nic_type = module.common.nic_type
 }
 
 module "external_load_balancer" {

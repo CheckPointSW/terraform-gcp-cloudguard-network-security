@@ -51,7 +51,8 @@ resource "google_compute_instance" "gateway" {
     subnetwork = var.subnetwork[0]
     subnetwork_project = var.network_project == "" ? null : var.network_project
     stack_type = var.ip_stack_type
-    
+    nic_type = var.nic_type
+
     dynamic "access_config" {
       for_each = (var.external_ip == "none") ? [] : [1]
       content {
@@ -76,6 +77,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network1_subnetwork[0]
       subnetwork_project = var.internal_network1_project == "" ? null : var.internal_network1_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -87,6 +89,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network2_subnetwork[0]
       subnetwork_project = var.internal_network2_project == "" ? null : var.internal_network2_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -98,6 +101,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network3_subnetwork[0]
       subnetwork_project = var.internal_network3_project == "" ? null : var.internal_network3_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -109,6 +113,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network4_subnetwork[0]
       subnetwork_project = var.internal_network4_project == "" ? null : var.internal_network4_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -120,6 +125,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network5_subnetwork[0]
       subnetwork_project = var.internal_network5_project == "" ? null : var.internal_network5_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -131,6 +137,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network6_subnetwork[0]
       subnetwork_project = var.internal_network6_project == "" ? null : var.internal_network6_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
   
@@ -142,6 +149,7 @@ resource "google_compute_instance" "gateway" {
       subnetwork = var.internal_network7_subnetwork[0]
       subnetwork_project = var.internal_network7_project == "" ? null : var.internal_network7_project
       stack_type = var.ip_stack_type
+      nic_type = var.nic_type
     }
   }
 

@@ -49,4 +49,10 @@ locals {
 
   // Will fail if var.externalIP is invalid
   validate_external_ip = contains(local.external_ip_allowed_values, var.externalIP) ? 0 : index("error:", "Invalid external IP type. Allowed values are: static, ephemeral, none")
+
+  // gVNIC - auto-enabled for versions not in the unsupported list
+  gvnic_unsupported_versions = ["R8110", "R8120", "R82", "R8210"]
+  validate_nic_type_value = contains(["", "GVNIC", "VIRTIO_NET"], var.nic_type) ? 0 : index("error:", "Invalid nic_type. Allowed values: '' (auto-detect), 'GVNIC', 'VIRTIO_NET'")
+  validate_nic_type_version = var.nic_type == "GVNIC" && contains(local.gvnic_unsupported_versions, upper(var.os_version)) ? index("error:", "GVNIC is only supported on R82.20 and above.") : 0
+  nic_type = var.nic_type != "" ? var.nic_type : (contains(local.gvnic_unsupported_versions, upper(var.os_version)) ? "VIRTIO_NET" : "GVNIC")
 }

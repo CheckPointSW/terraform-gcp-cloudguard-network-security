@@ -149,7 +149,7 @@ module "nsi_producer" {
   mgmt_network_esp_traffic  = ""
 
   # --- Autoscaling Configuration ---
-  machine_type                = "n1-standard-4"
+  machine_type                = "n2-standard-4"
   cpu_usage                   = 60
   instances_min_group_size    = 2
   instances_max_group_size    = 10
@@ -219,7 +219,7 @@ To get the list of images per solution:
     `gcloud compute images list --project "checkpoint-public" --filter="name~'^check-point-VERSION-gw-LICENSE-nsi-[0-9]{3}-[0-9]{3,}-v[0-9]{8,}.*'" --format="table(name, creationTimestamp:sort=2:reverse)"`
 
     Replace:
-    - `VERSION` with either `r8120`, `r82` or `r8210`.
+    - `VERSION` with either `r8120`, `r82`, `r8210` or `r8220`.
     - `LICENSE` with either `byol` or `payg`.
 4. Choose the image name you wan't. Note that the newest one are the top of the list.
 
@@ -566,6 +566,14 @@ gcloud compute network-firewall-policies associations create \
 
 ---
 
+## NIC Type Configuration
+For R82.20 and above, Google Virtual NIC (gVNIC) is the default network interface for improved network performance. For older versions, VirtIO (VIRTIO_NET) is used.
+
+To override the auto-detected NIC type, set the `nic_type` variable:
+```hcl
+nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
+```
+
 ## Module's variables:
 | Name          | Description                                                                                                                                                                                                                                                                                                                                                           | Type          | Allowed values | Default       | Required      |
 | ------------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------- | ------------- | ------------- | ------------- |
@@ -573,7 +581,7 @@ gcloud compute network-firewall-policies associations create \
 | prefix | (Optional) Resources name prefix. <br/> Note: resource name must not contain reserved words based on [sk40179](https://support.checkpoint.com/results/sk/sk40179).                                                                                                                                                                                                   | string | N/A | "chkp-tf-nsi" | no |
 | license | Check Point license (BYOL or PAYG). Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                   | string | BYOL<br/>PAYG | "BYOL" | no |
 | source_image | The NSI image name.<br/>Leave empty or set to "latest" in order to deploy with the latest image.                                                                                                | string | N/A | "" | no |
-| os_version | Gaia OS Version. Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                                       | string | R8120;<br/> R82;<br/> R8210; | "R8210" | yes |
+| os_version | Gaia OS Version. Required only if you choose to get the latest image.                                                                                                                                                                                                                                                                                                                                                       | string | R8120;<br/> R82;<br/> R8210;<br/> R8220; | "R8210" | yes |
 | management_nic | Management Interface - Autoscaling Security Gateways in GCP can be managed by the ephemeral public IP or by the private IP of the Management interface (eth0).                                                                                                                                                                                                        | string | Ephemeral Public IP (eth0) <br/> Private IP (eth0) | "Ephemeral Public IP (eth0)" | no |
 | management_name | The name of the Security Management Server as it appears in the autoprovisioning configuration. (Enter a valid Security Management name including lowercase letters, digits and hyphens only).                                                                                                                                                                        | string | N/A | "checkpoint-management" | no |
 | configuration_template_name | Specify the provisioning configuration template name (for autoprovisioning). (Enter a valid autoprovisioning configuration template name including lowercase letters, digits, and hyphens only).                                                                                                                                                                 | string | N/A | "gcp-asg-autoprov-tmplt" | no |
@@ -596,13 +604,14 @@ gcloud compute network-firewall-policies associations create \
 | mgmt_network_udp_traffic | (Optional) Source IP ranges for UDP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable UDP traffic.                                                                                                                                                             | string | N/A | "" | no |
 | mgmt_network_sctp_traffic | (Optional) Source IP ranges for SCTP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable SCTP traffic.                                                                                                                                                           | string | N/A | "" | no |
 | mgmt_network_esp_traffic | (Optional) Source IP ranges for ESP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable ESP traffic.                                                                                                                                                             | string | N/A | "" | no |
-| machine_type | Machine Type.                                                                                                                                                                                                                                                                                                                                                         | string | N/A | "n1-standard-4" | no |
+| machine_type | Machine Type.                                                                                                                                                                                                                                                                                                                                                         | string | N/A | "n2-standard-4" | no |
 | cpu_usage | Target CPU usage (%) - Autoscaling adds or removes instances in the group to maintain this level of CPU usage on each instance.                                                                                                                                                                                                                                       | number | number between 10 and 90 | 60 | no |
 | instances_min_group_size | The minimal number of instances                                                                                                                                                                                                                                                                                                                                       | number | N/A | 2 | no |
 | instances_max_group_size | The maximal number of instances                                                                                                                                                                                                                                                                                                                                       | number | N/A | 10 | no |
 | disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency.                                                                                                                                                                                                       | string | SSD Persistent Disk <br/> Standard Persistent Disk | "SSD Persistent Disk" | no |
 | disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space.                                                                                                                                                                                                     | number | number between 100 and 4096 | 200 | no |
 | enable_monitoring | Enable Stackdriver monitoring                                                                                                                                                                                                                                                                                                                                         | bool | true <br/> false | false | no |
+| nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | no |
 | connection_draining_timeout | The time, in seconds, that the load balancer waits for active connections to complete before fully removing an instance from the backend group.                                                                                                                                                                                                                                                     | number | N/A | 300 | no |
 | ip_stack_type | The stack type for this deployment. Use IPV4_ONLY for IPv4 only, or IPV4_IPV6 for dual-stack (IPv4 + IPv6). | string | IPV4_ONLY / IPV4_IPV6 | "IPV4_ONLY" | no |
 
@@ -653,6 +662,7 @@ terraform output -json                      # View in JSON format
 | **Check Point** | `management_name` | Security Management Server name |
 | | `configuration_template_name` | Configuration template name |
 | | `source_image` | CloudGuard gateway image used |
+| | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 | **Autoscaling** | `instance_template_name` | Instance template name |
 | | `instance_group_manager_name` | Instance group manager name |
 | | `autoscaler_name` | Autoscaler name |

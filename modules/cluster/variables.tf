@@ -55,7 +55,7 @@ variable "deploy_with_public_ips" {
 variable "machine_type" {
   description = "The machine type to create, e.g. e2-small"
   type        = string
-  default     = "n1-standard-4"
+  default     = "n2-standard-4"
 }
 
 variable "boot_disk_type" {
@@ -413,5 +413,11 @@ variable "internal_network6_name" {
 variable "internal_network6_subnetwork_name" {
   type        = string
   description = "Used only if var.num_internal_networks equals 6 - 6th internal subnet ID in the chosen network. Assigns the instance an IPv4 address from the subnetwork's range."
+  default     = ""
+}
+
+variable "nic_type" {
+  type        = string
+  description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
   default     = ""
 }

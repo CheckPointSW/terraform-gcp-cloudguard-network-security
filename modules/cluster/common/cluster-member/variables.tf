@@ -22,7 +22,7 @@ variable "zone" {
 variable "machine_type" {
   type = string
   description = "Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have."
-  default = "n1-standard-4"
+  default = "n2-standard-4"
 }
 
 variable "disk_size" {
@@ -231,4 +231,10 @@ variable "deploy_with_public_ips" {
   description = "Deploy HA with public IPs"
   type        = bool
   default     = true
+}
+
+variable "nic_type" {
+  type        = string
+  description = "The NIC type for network interfaces. Computed by the common module based on OS version and nic_type setting."
+  default     = null
 }

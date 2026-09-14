@@ -41,6 +41,7 @@ module "member_a" {
   os_version = var.os_version
   maintenance_mode_password_hash = var.maintenance_mode_password_hash
   deploy_with_public_ips = var.deploy_with_public_ips
+  nic_type = var.nic_type
 }
 
 module "member_b" {
@@ -86,4 +87,5 @@ module "member_b" {
   os_version = var.os_version
   maintenance_mode_password_hash = var.maintenance_mode_password_hash
   deploy_with_public_ips = var.deploy_with_public_ips
+  nic_type = var.nic_type
 }

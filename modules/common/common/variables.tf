@@ -9,8 +9,8 @@ variable "os_version" {
   description = "GAIA OS version"
   default = "R8210"
   validation {
-    condition = contains(["R8120" , "R82", "R8210"], var.os_version)
-    error_message = "Allowed values for os_version are 'R8120', 'R82', 'R8210'"
+    condition = contains(["R8120" , "R82", "R8210", "R8220"], var.os_version)
+    error_message = "Allowed values for os_version are 'R8120', 'R82', 'R8210', 'R8220'"
   }
 }
 
@@ -45,6 +45,12 @@ variable "externalIP" {
     condition = contains(["static", "ephemeral", "none"], var.externalIP)
     error_message = "Invalid value for externalIP. Allowed values are 'static', 'ephemeral' or 'none'."
   }
+}
+
+variable "nic_type" {
+  type        = string
+  description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
+  default     = ""
 }
 
 variable "boot_disk_type" {

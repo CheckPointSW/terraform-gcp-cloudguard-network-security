@@ -54,3 +54,7 @@ output "forwarding_rule" {
 output "source_image" {
   value = local.image_name
 }
+output "nic_type" {
+  value       = module.common.nic_type
+  description = "The NIC type used for network interfaces (GVNIC or VIRTIO_NET)"
+}
