@@ -22,10 +22,14 @@ locals {
   )
 
   installation_type = (
-    local.marketplace || local.custom_image ? (length(regexall("check-point-[^-]+-gw-${local.license}(-single)?", var.source_image)) > 0 ? "Gateway only" :
-    length(regexall("check-point-[^-]+-${local.license}-mc", var.source_image)) > 0 ? "Manual Configuration" :
-    length(regexall("check-point-[^-]+-${local.license}-sa", var.source_image)) > 0 ? "Gateway and Management (Standalone)" :
-    length(regexall("check-point-[^-]+-${local.license}", var.source_image)) > 0 ? "Management only" : ""
+    local.marketplace || local.custom_image ? (
+      length(regexall("check-point-[^-]+-gw-${local.license}(-single)?", var.source_image)) > 0 ? "Gateway only" :
+      length(regexall("check-point-[^-]+-${local.license}-mc", var.source_image)) > 0 ? "Manual Configuration" :
+      length(regexall("check-point-[^-]+-${local.license}-sa", var.source_image)) > 0 ? "Gateway and Management (Standalone)" :
+      length(regexall("check-point-[^-]+-mgmt-${local.license}", var.source_image)) > 0 ? "Management only" :
+      (length(regexall("check-point-[^-]+-${local.license}", var.source_image)) > 0 && var.installation_type == "Gateway and Management (Standalone)") ? var.installation_type :
+      (length(regexall("check-point-[^-]+-${local.license}", var.source_image)) > 0 && var.installation_type == "Manual Configuration") ? var.installation_type :
+      length(regexall("check-point-[^-]+-${local.license}", var.source_image)) > 0 ? "Management only" : ""
     ) : var.installation_type
   )
 
@@ -33,7 +37,7 @@ locals {
     local.installation_type == "Gateway only" ? "gw-${local.license}-single" :
     local.installation_type == "Manual Configuration" ? "${local.license}-mc" :
     local.installation_type == "Gateway and Management (Standalone)" ? "${local.license}-sa" :
-    local.installation_type == "Management only" ? "${local.license}" : ""
+    local.installation_type == "Management only" ? "mgmt-${local.license}" : ""
   )
 
   create_network_condition = var.network_cidr == "" ? false : true
