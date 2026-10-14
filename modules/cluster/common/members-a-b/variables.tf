@@ -39,7 +39,7 @@ variable "disk_type" {
 
 variable "image_name" {
   type = string
-  description = "The High Availability (cluster) image name (e.g. check-point-r8210-gw-byol-cluster-467-991002216-v20260811). You can choose the desired cluster image value from: https://github.com/CheckPointSW/CloudGuardIaaS/blob/master/gcp/deployment-packages/ha-byol/images.py"
+  description = "The High Availability (cluster) image name (e.g. check-point-r8210-gw-byol-cluster-467-991002279-v20261007). You can choose the desired cluster image value from: https://github.com/CheckPointSW/CloudGuardIaaS/blob/master/gcp/deployment-packages/ha-byol/images.py"
 }
 
 variable "os_version" {
