@@ -8,8 +8,7 @@ resource "google_compute_instance" "cluster_member" {
   name = var.member_name
   description = "CloudGuard Highly Available Security Cluster"
   zone = var.zone
-  tags = [
-    "checkpoint-gateway"]
+  tags = ["checkpoint-gateway", "${var.prefix}-member"]
   machine_type = var.machine_type
   can_ip_forward = true
 

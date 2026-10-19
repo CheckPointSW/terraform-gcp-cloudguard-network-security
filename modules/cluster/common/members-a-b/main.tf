@@ -89,3 +89,24 @@ module "member_b" {
   deploy_with_public_ips = var.deploy_with_public_ips
   nic_type = var.nic_type
 }
+
+resource "google_compute_firewall" "sync" {
+  count         = var.add_ha_fw_rules ? 1 : 0
+  description   = "Full Sync and CCP between cluster members"
+  direction     = "INGRESS"
+  name          = "${var.prefix}-sync"
+  project       = var.project
+  network       = var.mgmt_network[0]
+  source_ranges = formatlist("%s/32", [module.member_a.cluster_member_sync_ip, module.member_b.cluster_member_sync_ip])
+  target_tags   = ["${var.prefix}-member"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["256", "263"]
+  }
+
+  allow {
+    protocol = "udp"
+    ports    = ["8116"]
+  }
+}
