@@ -52,6 +52,12 @@ variable "deploy_with_public_ips" {
   default     = true
 }
 
+variable "add_ha_fw_rules" {
+  description = "Add default firewall rules for the HA cluster solution."
+  type        = bool
+  default     = true
+}
+
 variable "machine_type" {
   description = "The machine type to create, e.g. e2-small"
   type        = string

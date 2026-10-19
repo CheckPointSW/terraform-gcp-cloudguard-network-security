@@ -230,6 +230,7 @@ resource "random_string" "generated_password" {
 
 module "members_a_b" {
   source = "./common/members-a-b"
+  add_ha_fw_rules = var.add_ha_fw_rules
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"
   region = local.region
   zone_a = var.zone_a

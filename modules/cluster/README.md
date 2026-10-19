@@ -95,6 +95,7 @@ For each network and subnet variable, you can choose whether to create a new net
     cluster_network_subnetwork_name = "cluster-subnetwork"
     ```
 ## Firewall Rules
+
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter list of Source IP ranges.
 - For cluster:
 
@@ -117,6 +118,12 @@ To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter
     ```
 
 Please leave empty "" for a protocol if you want to disable traffic for it.
+
+### Default HA Firewall Rules
+
+Enabled by default (`add_ha_fw_rules = true`). Set to `false` to manage these rules yourself.
+
+- **Sync rule:** Allows member communication on TCP 256/263 and UDP 8116.
 
 ## Internal Networks
 The cluster members will each have a network interface in each internal network and create high priority routes that will route all outgoing traffic to the cluster member that is currently active.
@@ -185,6 +192,7 @@ nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 | machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n2-standard-4" | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
 | boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
+| add_ha_fw_rules | Add default firewall rules for the HA cluster solution. | bool | true/false | true | No |
 | enable_monitoring | Enable Stackdriver monitoring | bool | true/false | false | No |
 | nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
 | management_network  | Security Management Server address - The public address of the Security Management Server, in CIDR notation. If using Smart-1 Cloud management, insert 'S1C'. VPN peers addresses cannot be in this CIDR block, so this value cannot be the zero-address. | string | N/A | N/A | Yes |

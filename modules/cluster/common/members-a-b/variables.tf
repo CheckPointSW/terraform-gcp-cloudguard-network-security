@@ -1,3 +1,9 @@
+variable "add_ha_fw_rules" {
+  description = "Add default firewall rules for the HA cluster solution."
+  type        = bool
+  default     = true
+}
+
 variable "prefix" {
   type = string
   description = "(Optional) Resources name prefix"
