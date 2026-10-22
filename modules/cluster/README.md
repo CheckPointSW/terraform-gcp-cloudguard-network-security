@@ -155,7 +155,7 @@ You can choose to either deploy with the latest image or with a custom image.
 - Otherwise specify the `source_image` with the path to the image:
 
     ```
-    source_image = "check-point-r8210-gw-byol-cluster-467-991002279-v20261007"
+    source_image = "check-point-r8210-gw-byol-cluster-467-991002303-v20261020"
     os_version = ""  # Leave empty when specifying an image
     license = ""     # Leave empty when specifying an image
     ```
