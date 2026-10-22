@@ -20,7 +20,7 @@ variable "prefix" {
 variable "source_image" {
   type        = string
   description = "The image name for the disk for the VM instance."
-  default     = "projects/checkpoint-public/global/images/check-point-r8210-gw-byol-single-467-991002279-v20261007"
+  default     = "projects/checkpoint-public/global/images/check-point-r8210-gw-byol-single-467-991002303-v20261020"
 }
 
 variable "os_version" {
@@ -31,7 +31,7 @@ variable "os_version" {
 
 variable "license" {
   type        = string
-  description = "The license type for the Check Point image. Allowed values are: BYOL, PAYG."
+  description = "The license type used when source_image is empty or latest. A custom image's license is derived from its name. Allowed values are: BYOL, PAYG."
   default     = "BYOL"
 }
 
