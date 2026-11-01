@@ -66,3 +66,9 @@ variable "ip_stack_type" {
   type        = string
   default     = "IPV4_ONLY"
 }
+
+variable "enable_health_check_logging" {
+  description = "Enable backend health transition logs."
+  type        = bool
+  default     = false
+}

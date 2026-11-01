@@ -22,6 +22,10 @@ resource "google_compute_address" "internal_ipv6" {
 resource "google_compute_health_check" "health_check" {
   name    = "${var.prefix}-ilb-health-check"
   project = var.project
+
+  log_config {
+    enable = var.enable_health_check_logging
+  }
   
   dynamic "tcp_health_check" {
     for_each = var.ip_stack_type == "IPV4_ONLY" ? [1] : []
