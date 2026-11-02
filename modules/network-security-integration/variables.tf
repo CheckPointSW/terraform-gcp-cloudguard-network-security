@@ -142,6 +142,17 @@ variable "security_network_cidr" {
   default = ""
 }
 
+variable "security_network_mtu" {
+  type = number
+  description = "(Optional) MTU in bytes of the security VPC network and its instance interfaces. Applies only when a new security network is created (security_network_cidr is set); changing it later has no effect. Must be at least the consumer VPC MTU + 396 bytes for GENEVE encapsulation."
+  default = 1856
+  nullable = false
+  validation {
+    condition = floor(var.security_network_mtu) == var.security_network_mtu && var.security_network_mtu >= 1300 && var.security_network_mtu <= 8896
+    error_message = "security_network_mtu must be a whole number between 1300 and 8896 (inclusive)."
+  }
+}
+
 variable "mgmt_network_icmp_traffic" {
   type = string
   description = "(Optional) Source IP ranges for ICMP traffic to the Management VPC - Traffic is only allowed from sources within these IP address ranges. Use CIDR notation when entering ranges. For multiple ranges use comma separation e.g., \"10.0.0.0/8, 192.168.0.0/16\". Leave empty to disable ICMP traffic."
