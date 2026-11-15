@@ -57,6 +57,7 @@ module "security_network_and_subnet" {
     prefix = "${var.prefix}-security-network-${random_string.nsi_random_string.result}"
     type = "nsi"
     network_cidr = var.security_network_cidr
+    mtu = var.security_network_mtu
     private_ip_google_access = true
     region = var.region
     network_name = var.security_network_name

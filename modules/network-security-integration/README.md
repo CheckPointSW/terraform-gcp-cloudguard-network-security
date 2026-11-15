@@ -140,6 +140,7 @@ module "nsi_producer" {
   security_network_cidr    = "10.0.5.0/24"
   security_network_name    = ""
   security_subnetwork_name = ""
+  security_network_mtu     = 1856
 
   # --- Management VPC Firewall Rules ---
   mgmt_network_icmp_traffic = "0.0.0.0/0"
@@ -179,6 +180,15 @@ mgmt_network_cidr    = ""       # Leave empty when using existing VPC
 mgmt_network_name    = "existing-network-name"
 mgmt_subnetwork_name = "existing-subnet-name"
 ```
+
+## MTU
+The security VPC receives intercepted traffic encapsulated in [GENEVE](https://cloud.google.com/network-security-integration/docs/understand-geneve#geneve-mtu). Google Cloud requires the producer (security) VPC MTU to be at least the consumer VPC MTU + 396 bytes; otherwise, large packets can be dropped.
+
+- When the module creates the security VPC (`security_network_cidr` is set), it sets the VPC MTU to `security_network_mtu`, and the gateways inherit it. The MTU is set only at creation; changing `security_network_mtu` later has no effect.
+- The default, `1856` (1460 + 396), supports consumer VPCs that use the Google Cloud default MTU (1460). If your consumer VPCs use a larger MTU, set `security_network_mtu` to at least that MTU + 396, up to the [maximum VPC MTU](https://cloud.google.com/vpc/docs/mtu) (8896).
+- **Existing security VPC** (`security_network_name`): the module doesn't change its MTU.
+- **Upgrading from an earlier module version:** a security VPC created by the earlier version keeps its MTU (1460), which doesn't meet the requirement above.
+- **Changing the MTU of an existing security VPC:** use a maintenance window, because Google Cloud requires all instances in the VPC to be stopped (intercepted traffic is interrupted). Turn off autoscaling, resize the gateway managed instance group to 0 and wait until it has no instances, run `gcloud compute networks update NETWORK --mtu=MTU`, and then turn autoscaling back on so the group recreates the gateways. See [Change the MTU setting of a VPC network](https://cloud.google.com/vpc/docs/change-mtu-vpc-network).
 
 ## Firewall Rules
 To create Firewall and allow traffic for ICMP, TCP, UDP, SCTP or/and ESP - enter comma-separated list of Source IP ranges.
@@ -599,6 +609,7 @@ nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 | security_network_name | The network determines what network traffic the instance can access.                                                                                                                                                                                                                                                                                                  | string | N/A | N/A | yes |
 | security_subnetwork_name | Assigns the instance an IPv4 address from the subnetworkâ€™s range. Instances in different subnetworks can communicate using their internal IP addresses as long as they belong to the same network.                                                                                                                                                             | string | N/A | N/A | yes |
 | security_network_cidr | The range of internal addresses that are owned by this network, only IPv4 is supported (for example "10.0.0.0/8" or "192.168.0.0/16").                                                                                                                                                                                                                                       | string | N/A |"10.0.2.0/24" | no|
+| security_network_mtu | MTU in bytes of the security VPC network. Applies only when a new security network is created (`security_network_cidr` is set); changing it later has no effect. Must be at least the consumer VPC MTU + 396 bytes for GENEVE encapsulation. See [MTU](#mtu). | number | 1300 - 8896 | 1856 | no |
 | mgmt_network_icmp_traffic | (Optional) Source IP ranges for ICMP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable ICMP traffic.                                                                                                                                                           | string | N/A | "" | no |
 | mgmt_network_tcp_traffic | (Optional) Source IP ranges for TCP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable TCP traffic.                                                                                                                                                             | string | N/A | "" | no |
 | mgmt_network_udp_traffic | (Optional) Source IP ranges for UDP traffic on the management VPC - Comma-separated CIDR ranges (e.g., "10.0.0.0/8, 172.16.0.0/12"). Leave empty ("") to disable UDP traffic.                                                                                                                                                             | string | N/A | "" | no |

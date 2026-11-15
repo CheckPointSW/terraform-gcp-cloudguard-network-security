@@ -35,6 +35,11 @@ variable "project" {
   description = "The project in which the resource (network/subnetwork) belongs. If empty, the provider project is used."
   default = ""
 }
+variable "mtu" {
+  type = number
+  description = "MTU of the new network, in bytes. Leave null to use the GCP default."
+  default = null
+}
 variable "ip_stack_type" {
   type = string
   description = "The IP stack type for this network. Possible values are IPV4_ONLY and IPV4_IPV6."
