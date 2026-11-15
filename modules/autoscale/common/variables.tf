@@ -44,9 +44,14 @@ variable "management_nic" {
 }
 
 variable "management_name" {
-  type = string
-  description = "The name of the Security Management Server as appears in autoprovisioning configuration. (Please enter a valid Security Management name including ascii characters only)"
-  default = "tf-checkpoint-management"
+  type        = string
+  description = "The name of the Security Management Server as appears in autoprovisioning configuration. Must be 1-44 characters, contain only lowercase letters, digits, and hyphens, start with a lowercase letter, and end with a lowercase letter or digit."
+  default     = "tf-checkpoint-management"
+
+  validation {
+    condition     = can(regex("^[a-z]([-a-z0-9]{0,42}[a-z0-9])?$", var.management_name))
+    error_message = "management_name must be 1-44 characters, contain only lowercase letters, digits, and hyphens, start with a lowercase letter, and end with a lowercase letter or digit."
+  }
 }
 
 variable "configuration_template_name" {
