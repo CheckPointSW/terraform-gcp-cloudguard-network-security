@@ -1,4 +1,6 @@
 locals {
+  boot_disk_kms_key = var.boot_disk_kms_key == "" ? null : var.boot_disk_kms_key
+
   # The marketplace deployment flag. ## DO NOT EDIT ##.
   marketplace = false
 

@@ -29,6 +29,13 @@ resource "google_compute_instance_template" "instance_template" {
 
 
   disk {
+    dynamic "disk_encryption_key" {
+      for_each = var.boot_disk_kms_key == null ? [] : [var.boot_disk_kms_key]
+      content {
+        kms_key_self_link = disk_encryption_key.value
+      }
+    }
+
     source_image = "checkpoint-public/${var.image_name}"
     auto_delete = true
     boot = true

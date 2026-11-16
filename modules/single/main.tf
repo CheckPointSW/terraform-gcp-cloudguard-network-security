@@ -275,6 +275,7 @@ module "internal_network7_and_subnet" {
 }
 
 module "single" {
+  boot_disk_kms_key = local.boot_disk_kms_key
   source               = "./common"
   project              = var.project_id
 

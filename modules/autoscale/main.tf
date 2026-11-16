@@ -174,6 +174,7 @@ module "esp_ipv6_firewall_rules" {
 
 
 module "autoscale" {
+  boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common"
 
   project = var.project_id

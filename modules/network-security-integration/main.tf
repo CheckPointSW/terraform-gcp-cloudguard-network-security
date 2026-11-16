@@ -126,6 +126,7 @@ module "security_network_allow_tcp_8117_hc_ranges_firewall" {
 }
 
 module "network-security-integration" {
+  boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common"
 
   project = var.project

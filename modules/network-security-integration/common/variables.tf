@@ -194,3 +194,10 @@ variable "nic_type" {
   description = "The NIC type for network interfaces. Computed by the common module based on OS version and nic_type setting."
   default     = null
 }
+
+variable "boot_disk_kms_key" {
+  description = "Cloud KMS CryptoKey resource ID for boot disk encryption. Null uses Google-managed encryption."
+  type        = string
+  default     = null
+  nullable    = true
+}

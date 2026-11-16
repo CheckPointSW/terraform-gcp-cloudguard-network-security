@@ -1,4 +1,5 @@
 module "member_a" {
+  boot_disk_kms_key = var.boot_disk_kms_key
   source = "../cluster-member"
   prefix = var.prefix
   member_name = "${var.prefix}-member-a"
@@ -45,6 +46,7 @@ module "member_a" {
 }
 
 module "member_b" {
+  boot_disk_kms_key = var.boot_disk_kms_key
   source = "../cluster-member"
   prefix = var.prefix
   member_name = "${var.prefix}-member-b"

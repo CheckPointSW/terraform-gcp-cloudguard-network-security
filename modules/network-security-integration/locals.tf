@@ -1,4 +1,6 @@
 locals{
+    boot_disk_kms_key = var.boot_disk_kms_key == "" ? null : var.boot_disk_kms_key
+
     custom_image = var.source_image != "" && var.source_image != "latest" ? true : false
 
     os_version = (

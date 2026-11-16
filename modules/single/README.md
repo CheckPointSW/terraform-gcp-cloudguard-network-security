@@ -266,6 +266,18 @@ To override the auto-detected NIC type, set the `nic_type` variable:
 nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 ```
 
+## Boot disk encryption
+
+Boot disks use Google-managed encryption when `boot_disk_kms_key` is omitted or empty. To use an existing Cloud KMS key, set the optional input:
+
+```hcl
+boot_disk_kms_key = "projects/my-project/locations/us-central1/keyRings/firewall/cryptoKeys/boot-disk"
+```
+
+Grant the deployment project's Compute Engine service agent `roles/cloudkms.cryptoKeyEncrypterDecrypter` on the key before deployment. The key must use a [supported location](https://cloud.google.com/compute/docs/disks/customer-managed-encryption). Keys in another project are supported when access and organization policies permit them. This module does not create keys or manage key permissions.
+
+Enabling or changing the key requires replacement of existing boot disks. Keep the key available for the lifetime of the disks and any dependent backups.
+
 ## Inputs
 | Name | Description | Type | Allowed values | Default | Required |
 | -----| ----------- | ---- | ---------------| ------- | -------- |
@@ -295,6 +307,7 @@ nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 | network_esp_ipv6_source_ranges | Source IPv6 ranges for ESP traffic. For multiple ranges split them by a comma e.g. "2001:db8::/32, ::/0". | string | IPv6 traffic is only allowed from sources within these IP address ranges. Use IPv6 CIDR notation. For gateway only. | "" | No |
 | boot_disk_type | Disk type. | string | SSD Persistent Disk;<br/>standard-Persistent Disk;<br/>Storage space is much less expensive for a standard persistent disk. An SSD persistent disk is better for random IOPS or streaming throughput with low latency. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.66020774.-962483654.1585043745#overview_of_disk_types) | SSD Persistent Disk | No |
 | boot_disk_size | Disk size in GB. | number | Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. [Learn more](https://cloud.google.com/compute/docs/disks/?hl=en_US&_ga=2.232680471.-962483654.1585043745#pdperformance) | 200 | No |
+| boot_disk_kms_key | Cloud KMS CryptoKey resource ID for boot disk encryption. | string | `projects/PROJECT/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY` | "" | No |
 | generate_password | Automatically generate an administrator password. | boolean | true; <br/>false; | false | No |
 | allow_upload_download | Allow download from/upload to Check Point. | boolean | true; <br/>false; | true | No |
 | enable_monitoring | Enable Stackdriver monitoring. | boolean | true; <br/>false; | false | No |
