@@ -116,6 +116,8 @@ resource "google_compute_instance" "cluster_member" {
 
   metadata_startup_script = templatefile("${path.module}/../startup-script.sh", {
     // script's arguments
+    post_install_scripts_write_files = var.post_install_scripts_write_files
+    post_install_scripts_runcmd = var.post_install_scripts_runcmd
     generatePassword = var.generate_password
     config_url = "https://runtimeconfig.googleapis.com/v1beta1/projects/${var.project}/configs/${var.prefix}-config"
     config_path = "projects/${var.project}/configs/${var.prefix}-config"

@@ -620,6 +620,8 @@ Existing disks are not re-encrypted. Recreation creates new boot disks and can i
 | admin_SSH_key | Public SSH key for the user 'admin' - The SSH public key for SSH authentication to the MIG instances. Leave this field blank to use all project-wide pre-configured SSH keys.                                                                                                                                                                                         | string | A valid public ssh key | "" | no |
 | maintenance_mode_password_hash | Maintenance mode password hash, relevant only for R81.20 and higher versions, to generate a password hash, use the command 'grub2-mkpasswd-pbkdf2' on Linux and paste it here.                                                                                                                                                                                         | string |  N/A | "" | no |
 | admin_shell | Change the admin shell to enable advanced command line configuration.                                                                                                                                                                                                                                                                                                 | string | /etc/cli.sh <br/> /bin/bash <br/> /bin/csh <br/> /bin/tcsh | "/etc/cli.sh" | no |
+| post_install_script_paths | Local script paths. | list(string) | Local paths | `[]` | No |
+| post_install_script_timeout | Maximum runtime per script in seconds (1-86400). | number | 1-86400 | `300` | No |
 | allow_upload_download | Automatically download Blade Contracts and other important data. Improve product experience by sending data to Check Point.                                                                                                                                                                                                                                            | bool | true/false | true | no |
 | region  | GCP region, the gateways will be randomly deployed in zones within the provided region                                                                                                                                                                                                                                                                                   | string  | N/A | "us-central1"  | no |
 | intercept_all_zones | Deploy the **intercept deployment** across all UP zones in the region. When `false`, scope to `intercept_deployment_zones`. When `true`, `intercept_deployment_zones` is ignored (a warning is emitted if set); zones are resolved at apply time, and a newly added region zone is intercepted on the next `terraform apply`.                                                                                                                                                          | bool | true <br/> false | false | no |
@@ -701,3 +703,23 @@ terraform output -json                      # View in JSON format
 | | `autoscaler_name` | Autoscaler name |
 | **NSI Resources** | `intercept_deployment_group_id` | Intercept Deployment Group ID |
 | | `forwarding_rule` | Map of forwarding rules by zone |
+
+## Post-install scripts
+
+`post_install_script_paths` accepts local script paths; URLs are not supported. Paths can be
+absolute, relative to your Terraform configuration, or use `../` or `~/`.
+
+Unlike AWS/Azure inline scripts, GCP accepts local files for execution after configuration.
+
+Scripts run after CloudGuard configuration, in list order, and remain in `/var/tmp/post_install_scripts`.
+Script contents are visible in instance metadata and Terraform state. **Do not include secrets or credentials;
+Base64 encoding does not protect them.**
+
+Scripts run sequentially with a 300-second timeout each, configurable with `post_install_script_timeout`.
+Failures are logged in `/opt/CPcge/log/boot.log`; remaining scripts run before Gaia reports the failure.
+
+Encoded script budget: **200 KiB**, including the wrapper and encoding overhead.
+
+```hcl
+post_install_script_paths = ["scripts/setup.sh", "/opt/scripts/configure.sh", "~/scripts/finalize.sh"]
+```

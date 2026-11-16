@@ -1,4 +1,7 @@
 module "member_a" {
+  post_install_scripts_write_files = var.post_install_scripts_write_files
+  post_install_scripts_runcmd = var.post_install_scripts_runcmd
+
   boot_disk_kms_key = var.boot_disk_kms_key
   source = "../cluster-member"
   prefix = var.prefix
@@ -46,6 +49,9 @@ module "member_a" {
 }
 
 module "member_b" {
+  post_install_scripts_write_files = var.post_install_scripts_write_files
+  post_install_scripts_runcmd = var.post_install_scripts_runcmd
+
   boot_disk_kms_key = var.boot_disk_kms_key
   source = "../cluster-member"
   prefix = var.prefix

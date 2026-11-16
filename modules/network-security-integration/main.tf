@@ -126,6 +126,8 @@ module "security_network_allow_tcp_8117_hc_ranges_firewall" {
 }
 
 module "network-security-integration" {
+  post_install_scripts_write_files = module.post_install_scripts.write_files
+  post_install_scripts_runcmd      = module.post_install_scripts.runcmd
   boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common"
 
@@ -169,4 +171,10 @@ module "network-security-integration" {
   enable_monitoring = var.enable_monitoring
   connection_draining_timeout = var.connection_draining_timeout
   nic_type = module.common.nic_type
+}
+
+module "post_install_scripts" {
+  source                      = "../common/post-install-scripts"
+  post_install_script_paths   = var.post_install_script_paths
+  post_install_script_timeout = var.post_install_script_timeout
 }

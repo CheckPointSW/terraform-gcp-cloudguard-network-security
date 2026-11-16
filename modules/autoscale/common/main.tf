@@ -105,6 +105,8 @@ resource "google_compute_instance_template" "instance_template" {
 
   metadata_startup_script = templatefile("${path.module}/startup-script.sh", {
     // script's arguments
+    post_install_scripts_write_files = var.post_install_scripts_write_files
+    post_install_scripts_runcmd = var.post_install_scripts_runcmd
     generatePassword = var.generate_password
     config_url = ""
     config_path = ""

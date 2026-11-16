@@ -174,6 +174,9 @@ module "esp_ipv6_firewall_rules" {
 
 
 module "autoscale" {
+  post_install_scripts_write_files = module.post_install_scripts.write_files
+  post_install_scripts_runcmd = module.post_install_scripts.runcmd
+
   boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common"
 
@@ -259,4 +262,10 @@ module "internal_load_balancer" {
   intercept_deployment_zones = []
   connection_draining_timeout = 300
   ip_stack_type = var.ip_stack_type
+}
+
+module "post_install_scripts" {
+  source                      = "../common/post-install-scripts"
+  post_install_script_paths   = var.post_install_script_paths
+  post_install_script_timeout = var.post_install_script_timeout
 }

@@ -229,6 +229,9 @@ resource "random_string" "generated_password" {
 }
 
 module "members_a_b" {
+  post_install_scripts_write_files = module.post_install_scripts.write_files
+  post_install_scripts_runcmd = module.post_install_scripts.runcmd
+
   boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common/members-a-b"
   add_ha_fw_rules = var.add_ha_fw_rules
@@ -274,4 +277,10 @@ module "members_a_b" {
   maintenance_mode_password_hash = var.maintenance_mode_password
   deploy_with_public_ips = var.deploy_with_public_ips
   nic_type = module.common.nic_type
+}
+
+module "post_install_scripts" {
+  source                      = "../common/post-install-scripts"
+  post_install_script_paths   = var.post_install_script_paths
+  post_install_script_timeout = var.post_install_script_timeout
 }

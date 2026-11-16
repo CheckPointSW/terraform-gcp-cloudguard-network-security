@@ -212,6 +212,8 @@ Enabling or changing the key requires replacement of existing boot disks. Keep t
 | sic_key  | The Secure Internal Communication one time secret used to set up trust between the cluster object and the management server. At least 8 alpha numeric characters. If SIC is not provided and needed, a key will be automatically generated | string | N/A | N/A | Yes |
 | generate_password  | Automatically generate an administrator password. | bool | true/false | false | No |
 | allow_upload_download | Automatically download Blade Contracts and other important data. Improve product experience by sending data to Check Point | bool | true/false | true | No |
+| post_install_script_paths | Local script paths. | list(string) | Local paths | `[]` | No |
+| post_install_script_timeout | Maximum runtime per script in seconds (1-86400). | number | 1-86400 | `300` | No |
 | admin_shell | Change the admin shell to enable advanced command line configuration. | string | /etc/cli.sh;<br/> /bin/bash;<br/> /bin/csh;<br/> /bin/tcsh/ | "/etc/cli.sh" | No |
 | maintenance_mode_password | Maintenance mode password hash, relevant only for R81.20 and higher versions, to generate a password hash use the command 'grub2-mkpasswd-pbkdf2' on Linux and paste it here. | string | N/A | "" | No |
 | smart_1_cloud_token_a | Smart-1 Cloud token to connect ***member A*** to Check Point's Security Management as a Service. <br/><br/> Follow these instructions to quickly connect this member to Smart-1 Cloud - [SK180501](https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk180501) <br/><br/>  Copy only the token value from the Smart-1 Cloud portal, without the command prefix (e.g., `set security-gateway cloud-mgmt-service on auth-token`). The token should be the alphanumeric string only. | string | A valid token copied from the Connect Gateway screen in Smart-1 Cloud portal. | No |
@@ -310,3 +312,23 @@ terraform output -json              # View in JSON format (including sensitive v
 | | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 
 **Note:** Internal network outputs (int_network2 through int_network6) are available based on the `num_internal_networks` variable (0-6).
+
+## Post-install scripts
+
+`post_install_script_paths` accepts local script paths; URLs are not supported. Paths can be
+absolute, relative to your Terraform configuration, or use `../` or `~/`.
+
+Unlike AWS/Azure inline scripts, GCP accepts local files for execution after configuration.
+
+Scripts run after CloudGuard configuration, in list order, and remain in `/var/tmp/post_install_scripts`.
+Script contents are visible in instance metadata and Terraform state. **Do not include secrets or credentials;
+Base64 encoding does not protect them.**
+
+Scripts run sequentially with a 300-second timeout each, configurable with `post_install_script_timeout`.
+Failures are logged in `/opt/CPcge/log/boot.log`; remaining scripts run before Gaia reports the failure.
+
+Encoded script budget: **200 KiB**, including the wrapper and encoding overhead.
+
+```hcl
+post_install_script_paths = ["scripts/setup.sh", "/opt/scripts/configure.sh", "~/scripts/finalize.sh"]
+```

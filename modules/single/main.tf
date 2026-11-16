@@ -275,6 +275,9 @@ module "internal_network7_and_subnet" {
 }
 
 module "single" {
+  post_install_scripts_write_files = module.post_install_scripts.write_files
+  post_install_scripts_runcmd = module.post_install_scripts.runcmd
+
   boot_disk_kms_key = local.boot_disk_kms_key
   source               = "./common"
   project              = var.project_id
@@ -334,4 +337,10 @@ module "single" {
   disk_size         = var.boot_disk_size
   enable_monitoring = var.enable_monitoring
   nic_type          = module.common.nic_type
+}
+
+module "post_install_scripts" {
+  source                      = "../common/post-install-scripts"
+  post_install_script_paths   = var.post_install_script_paths
+  post_install_script_timeout = var.post_install_script_timeout
 }

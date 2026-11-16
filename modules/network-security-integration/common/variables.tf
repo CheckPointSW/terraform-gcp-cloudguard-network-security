@@ -201,3 +201,17 @@ variable "boot_disk_kms_key" {
   default     = null
   nullable    = true
 }
+
+variable "post_install_scripts_write_files" {
+  description = "Post-install YAML entries to inject under write_files."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "post_install_scripts_runcmd" {
+  description = "Post-install YAML entries to inject after cloud_config.py in runcmd."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
