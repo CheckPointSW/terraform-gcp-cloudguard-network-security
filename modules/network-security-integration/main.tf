@@ -121,7 +121,7 @@ module "security_network_allow_tcp_8117_hc_ranges_firewall" {
   protocol = "tcp"
   source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
   ports = ["8117"]
-  rule_name = "${var.prefix}-data-network-allow-tcp-8117-hc-ranges"
+  rule_name = "${var.prefix}-data-network-allow-hc-8117"
   network = local.create_security_network_condition ? module.security_network_and_subnet.new_created_network_link : module.security_network_and_subnet.existing_network_link
 }
 

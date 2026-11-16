@@ -89,7 +89,7 @@ resource "google_compute_forwarding_rule" "forwarding_rule_regional_ipv6" {
 # Per-zone forwarding rules (for NSI deployments with intercept deployments)
 resource "google_compute_forwarding_rule" "forwarding_rule_zonal" {
   for_each              = toset(var.intercept_deployment_zones)
-  name                  = "${var.prefix}-ilb-forwarding-rule-${each.key}"
+  name                  = "${var.prefix}-fr-${each.key}"
   project               = var.project
   region                = var.region
   load_balancing_scheme = "INTERNAL"
@@ -98,4 +98,11 @@ resource "google_compute_forwarding_rule" "forwarding_rule_zonal" {
   ports                 = var.ports
   subnetwork            = var.subnetwork
   backend_service       = google_compute_region_backend_service.backend_service.self_link
+
+  lifecycle {
+    precondition {
+      condition     = can(regex("^[a-z]([-a-z0-9]{0,61}[a-z0-9])?$", "${var.prefix}-fr-${each.key}"))
+      error_message = "Forwarding rule name \"${var.prefix}-fr-${each.key}\" must be 1-63 characters, start with a lowercase letter, contain only lowercase letters, digits and hyphens, and not end with a hyphen. Shorten the prefix."
+    }
+  }
 }
