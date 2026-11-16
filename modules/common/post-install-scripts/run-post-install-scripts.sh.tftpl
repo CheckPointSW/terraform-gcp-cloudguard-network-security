@@ -1,0 +1,36 @@
+#!/bin/bash
+
+result=0
+
+for ((index = 0; index < ${script_count}; index++)); do
+  printf -v script_number '%06d' "$index"
+  script_path="/var/tmp/post_install_scripts/$script_number.sh"
+  if ! sed -i 's/\r$//' "$script_path"; then
+    echo "Post-install script $script_number failed to normalize line endings; continuing" >&2
+    result=1
+    continue
+  fi
+  script_command=(bash -e -o pipefail "$script_path")
+  first_line=""
+  IFS= read -r first_line < "$script_path" || true
+  if [[ "$first_line" == '#!'* ]]; then
+    # Bash reads SHELLOPTS; other interpreters keep their own exit behavior.
+    script_command=(env SHELLOPTS=errexit:pipefail "$script_path")
+  fi
+  echo "Starting post-install script $script_number (timeout ${post_install_script_timeout} seconds)"
+  if timeout -k 10s ${post_install_script_timeout}s "$${script_command[@]}"; then
+    echo "Post-install script $script_number completed"
+  else
+    status=$?
+    result=1
+    if [ "$status" -eq 124 ]; then
+      echo "Post-install script $script_number timed out after ${post_install_script_timeout} seconds; continuing" >&2
+    elif [ "$status" -eq 137 ]; then
+      echo "Post-install script $script_number failed with exit code 137 (SIGKILL; possible timeout escalation); continuing" >&2
+    else
+      echo "Post-install script $script_number failed with exit code $status; continuing" >&2
+    fi
+  fi
+done
+
+exit "$result"

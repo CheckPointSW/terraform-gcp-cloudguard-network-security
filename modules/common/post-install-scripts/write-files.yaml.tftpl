@@ -1,0 +1,10 @@
+  - path: /var/tmp/post_install_scripts/run-post-install-scripts.sh
+    permissions: '0700'
+    encoding: b64
+    content: "${wrapper_content}"
+%{ for index, content in script_contents ~}
+  - path: /var/tmp/post_install_scripts/${format("%06d", index)}.sh
+    permissions: '0700'
+    encoding: b64
+    content: "${content}"
+%{ endfor ~}

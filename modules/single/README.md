@@ -310,6 +310,8 @@ Enabling or changing the key requires replacement of existing boot disks. Keep t
 | boot_disk_kms_key | Cloud KMS CryptoKey resource ID for boot disk encryption. | string | `projects/PROJECT/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY` | "" | No |
 | generate_password | Automatically generate an administrator password. | boolean | true; <br/>false; | false | No |
 | allow_upload_download | Allow download from/upload to Check Point. | boolean | true; <br/>false; | true | No |
+| post_install_script_paths | Local script paths. | list(string) | Local paths | `[]` | No |
+| post_install_script_timeout | Maximum runtime per script in seconds (1-86400). | number | 1-86400 | `300` | No |
 | enable_monitoring | Enable Stackdriver monitoring. | boolean | true; <br/>false; | false | No |
 | nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
 | admin_shell | Change the admin shell to enable advanced command line configuration. | string | /etc/cli.sh;<br/>/bin/bash;<br/>/bin/csh;<br/>/bin/tcsh; | /etc/cli.sh | No |
@@ -391,3 +393,23 @@ terraform output -json              # View in JSON format (including sensitive v
 | | `nic_type` | The NIC type used for network interfaces (GVNIC or VIRTIO_NET) |
 
 **Note:** Internal network outputs are available based on the `num_additional_networks` variable (0-7). For example, if `num_additional_networks = 2`, you can access `int_network1_*` and `int_network2_*` outputs.
+
+## Post-install scripts
+
+`post_install_script_paths` accepts local script paths; URLs are not supported. Paths can be
+absolute, relative to your Terraform configuration, or use `../` or `~/`.
+
+Unlike AWS/Azure inline scripts, GCP accepts local files for execution after configuration.
+
+Scripts run after CloudGuard configuration, in list order, and remain in `/var/tmp/post_install_scripts`.
+Script contents are visible in instance metadata and Terraform state. **Do not include secrets or credentials;
+Base64 encoding does not protect them.**
+
+Scripts run sequentially with a 300-second timeout each, configurable with `post_install_script_timeout`.
+Failures are logged in `/opt/CPcge/log/boot.log`; remaining scripts run before Gaia reports the failure.
+
+Encoded script budget: **200 KiB**, including the wrapper and encoding overhead.
+
+```hcl
+post_install_script_paths = ["scripts/setup.sh", "/opt/scripts/configure.sh", "~/scripts/finalize.sh"]
+```

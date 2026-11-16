@@ -1,3 +1,8 @@
 #cloud-config
+%{ if post_install_scripts_write_files != "" ~}
+write_files:
+${post_install_scripts_write_files}%{ endif ~}
 runcmd:
   - 'python3 /etc/cloud_config.py generatePassword=\"${generatePassword}\" allowUploadDownload=\"${allowUploadDownload}\" templateName=\"${templateName}\" templateVersion=\"${templateVersion}\" mgmtNIC="X${mgmtNIC}X" hasInternet=\"${hasInternet}\" config_url=\"${config_url}\" config_path=\"${config_path}\" installationType="X${installation_type}X" isBlink=\"${isBlink}\" enableMonitoring=\"${enableMonitoring}\" shell=\"${shell}\" computed_sic_key=\"${computed_sic_key}\" sicKey=\"${sicKey}\" managementGUIClientNetwork=\"${managementGUIClientNetwork}\" primary_cluster_address_name=\"${primary_cluster_address_name}\" secondary_cluster_address_name=\"${secondary_cluster_address_name}\" managementNetwork=\"${managementNetwork}\" numAdditionalNICs=\"${numAdditionalNICs}\" smart1CloudToken="X${smart_1_cloud_token}X" name=\"${name}\" zone=\"${zoneConfig}\" region=\"${region}\" osVersion=\"${os_version}\" MaintenanceModePassword=\"${maintenance_mode_password_hash}\"'
+%{~ if post_install_scripts_runcmd != "" }
+${post_install_scripts_runcmd}%{ endif ~}

@@ -392,6 +392,8 @@ Existing disks are not re-encrypted. Recreation creates new boot disks and can i
 | sic_key | The Secure Internal Communication one time secret used to set up trust between the gateway object and the management server. | string | At least 8 alpha numeric characters.<br/>If SIC is not provided and needed, a key will be automatically generated | "" | No |
 | network_defined_by_routes | Set eth1 topology to define the networks behind this interface by the routes configured on the gateway. | bool | true/false | true | No |
 | admin_shell | Change the admin shell to enable advanced command line configuration. | string | /etc/cli.sh;<br/> /bin/bash;<br/> /bin/csh;<br/> /bin/tcsh; | "/etc/cli.sh" | No |
+| post_install_script_paths | Local script paths. | list(string) | Local paths | `[]` | No |
+| post_install_script_timeout | Maximum runtime per script in seconds (1-86400). | number | 1-86400 | `300` | No |
 | allow_upload_download | Automatically download Blade Contracts and other important data. Improve product experience by sending data to Check Point. | bool | true/false | true | No |
 | external_network_name | The network determines what network traffic the instance can access. | string | N/A | N/A | Yes |
 | external_subnetwork_name | Assigns the instance an IPv4 address from the subnetwork’s range. Instances in different subnetworks can communicate with each other using their internal IPs as long as they belong to the same network. | string | N/A | N/A | Yes |
@@ -495,3 +497,23 @@ terraform output -json              # View in JSON format (including sensitive v
 | | `internal_lb_ip` | Internal load balancer static IPv4 address |
 | **Load Balancers - IPv6** | `external_lb_ipv6` | External load balancer auto-allocated IPv6 address (dual-stack only) |
 | | `internal_lb_ipv6` | Internal load balancer static IPv6 address (dual-stack only) |
+
+## Post-install scripts
+
+`post_install_script_paths` accepts local script paths; URLs are not supported. Paths can be
+absolute, relative to your Terraform configuration, or use `../` or `~/`.
+
+Unlike AWS/Azure inline scripts, GCP accepts local files for execution after configuration.
+
+Scripts run after CloudGuard configuration, in list order, and remain in `/var/tmp/post_install_scripts`.
+Script contents are visible in instance metadata and Terraform state. **Do not include secrets or credentials;
+Base64 encoding does not protect them.**
+
+Scripts run sequentially with a 300-second timeout each, configurable with `post_install_script_timeout`.
+Failures are logged in `/opt/CPcge/log/boot.log`; remaining scripts run before Gaia reports the failure.
+
+Encoded script budget: **200 KiB**, including the wrapper and encoding overhead.
+
+```hcl
+post_install_script_paths = ["scripts/setup.sh", "/opt/scripts/configure.sh", "~/scripts/finalize.sh"]
+```
