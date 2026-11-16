@@ -229,6 +229,7 @@ resource "random_string" "generated_password" {
 }
 
 module "members_a_b" {
+  boot_disk_kms_key = local.boot_disk_kms_key
   source = "./common/members-a-b"
   add_ha_fw_rules = var.add_ha_fw_rules
   prefix = "${local.prefix_effective}-${random_string.random_string.result}"

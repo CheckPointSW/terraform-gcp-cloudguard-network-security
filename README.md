@@ -12,6 +12,18 @@
 This repository provides a structured set of Terraform modules for deploying Check Point CloudGuard Network Security in GCP. These modules automate the creation of Virtual Networks, Security Gateways, High-Availability architectures, and more, enabling secure and scalable cloud deployments.
 
 
+## Boot disk encryption
+
+Optional customer-managed boot disk encryption is available in [single](modules/single/README.md#boot-disk-encryption) (gateway, management, and standalone), [HA cluster](modules/cluster/README.md#boot-disk-encryption), [autoscale](modules/autoscale/README.md#boot-disk-encryption), and [Network Security Integration](modules/network-security-integration/README.md#boot-disk-encryption). Omit `boot_disk_kms_key` to retain Google-managed encryption, or set it to `google_kms_crypto_key.example.id` or a resource ID such as `projects/my-project/locations/us-central1/keyRings/firewall/cryptoKeys/boot-disk`.
+
+Before deployment, grant the deployment project's Compute Engine service agent access to the key:
+
+```sh
+gcloud kms keys add-iam-policy-binding KEY --project=KEY_PROJECT --location=LOCATION --keyring=KEY_RING --member=serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com --role=roles/cloudkms.cryptoKeyEncrypterDecrypter
+```
+
+`PROJECT_NUMBER` identifies the project containing the VMs; `KEY_PROJECT` identifies the project containing the key. See the module documentation for location requirements and replacement guidance.
+
 ## Before you begin
 1. Create a project in the [Google Cloud Console](https://console.cloud.google.com/) and set up billing on that project.
 2. [Install Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) and read the Terraform getting started guide that follows. This guide will assume basic proficiency with Terraform - it is an introduction to the Google provider.

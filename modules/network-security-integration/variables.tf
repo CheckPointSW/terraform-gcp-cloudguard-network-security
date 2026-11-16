@@ -261,3 +261,15 @@ variable "nic_type" {
   description = "NIC type for network interfaces. Default (empty) auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older versions. Set to 'VIRTIO_NET' to force VirtIO."
   default     = ""
 }
+
+variable "boot_disk_kms_key" {
+  description = "Cloud KMS CryptoKey resource ID for boot disk encryption. Leave empty for Google-managed encryption."
+  type        = string
+  default     = ""
+  nullable    = true
+
+  validation {
+    condition     = var.boot_disk_kms_key == null || var.boot_disk_kms_key == "" || can(regex("^projects/([a-z][a-z0-9-]{4,28}[a-z0-9]|[0-9]+)/locations/[a-z][a-z0-9-]*/keyRings/[A-Za-z0-9_-]{1,63}/cryptoKeys/[A-Za-z0-9_-]{1,63}$", var.boot_disk_kms_key))
+    error_message = "boot_disk_kms_key must be null, empty, or a Cloud KMS CryptoKey resource ID: projects/PROJECT/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY."
+  }
+}

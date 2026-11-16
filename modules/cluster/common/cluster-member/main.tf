@@ -13,6 +13,7 @@ resource "google_compute_instance" "cluster_member" {
   can_ip_forward = true
 
   boot_disk {
+    kms_key_self_link = var.boot_disk_kms_key
     auto_delete = true
     device_name = "${var.prefix}-boot"
 

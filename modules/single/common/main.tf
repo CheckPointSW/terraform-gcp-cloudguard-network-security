@@ -36,6 +36,7 @@ resource "google_compute_instance" "gateway" {
   can_ip_forward = var.installation_type == "Management only"? false:true
 
   boot_disk {
+    kms_key_self_link = var.boot_disk_kms_key
     auto_delete = true
     device_name = "chkp-single-boot-${random_string.random_string.result}"
     initialize_params {

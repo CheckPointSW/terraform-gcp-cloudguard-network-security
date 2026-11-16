@@ -179,6 +179,18 @@ To override the auto-detected NIC type, set the `nic_type` variable:
 nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 ```
 
+## Boot disk encryption
+
+Boot disks use Google-managed encryption when `boot_disk_kms_key` is omitted or empty. To use an existing Cloud KMS key, set the optional input:
+
+```hcl
+boot_disk_kms_key = "projects/my-project/locations/us-central1/keyRings/firewall/cryptoKeys/boot-disk"
+```
+
+Grant the deployment project's Compute Engine service agent `roles/cloudkms.cryptoKeyEncrypterDecrypter` on the key before deployment. The key must use a [supported location](https://cloud.google.com/compute/docs/disks/customer-managed-encryption). Keys in another project are supported when access and organization policies permit them. This module does not create keys or manage key permissions.
+
+Enabling or changing the key requires replacement of existing boot disks. Keep the key available for the lifetime of the disks and any dependent backups.
+
 ## Inputs
 | Name | Description | Type | Allowed values | Default | Required |
 | ---- | ----------- | ---- | -------------- | ------- | -------- |
@@ -192,6 +204,7 @@ nic_type = "VIRTIO_NET"    # Force VirtIO on R82.20+
 | machine_type | Machine types determine the specifications of your machines, such as the amount of memory, virtual cores, and persistent disk limits an instance will have. | string | N/A | "n2-standard-4" | No |
 | boot_disk_type | Storage space is much less expensive for a standard Persistent Disk. An SSD Persistent Disk is better for random IOPS or streaming throughput with low latency. | string | SSD Persistent Disk;<br/> Standard Persistent Disk; | "SSD Persistent Disk" | No |
 | boot_disk_size | Disk size in GB - Persistent disk performance is tied to the size of the persistent disk volume. You are charged for the actual amount of provisioned disk space. | number | number between 100 and 4096 | 200 | No |
+| boot_disk_kms_key | Cloud KMS CryptoKey resource ID for boot disk encryption. | string | `projects/PROJECT/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY` | "" | No |
 | add_ha_fw_rules | Add default firewall rules for the HA cluster solution. | bool | true/false | true | No |
 | enable_monitoring | Enable Stackdriver monitoring | bool | true/false | false | No |
 | nic_type | NIC type for network interfaces. Auto-detects based on OS version: GVNIC for R82.20+, VIRTIO_NET for older. Set to 'VIRTIO_NET' to force VirtIO. | string | "GVNIC";<br/>"VIRTIO_NET"; | "" | No |
